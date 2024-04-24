@@ -157,11 +157,3 @@ select * from team;
 select * from mysql.user;
 
 select `user`,authentication_string,`plugin`,`host` from mysql.user;
-
-insert into mysql.user(Select_priv, Insert_priv, Update_priv, Delete_priv, References_priv, Alter_priv) values ('Y', 'Y', 'Y', 'Y', 'Y', 'Y');
-
-select * from mysql.user where `user`='testuser';
-
-grant select,insert,delete,create on * to 'testuser'@'localhost';
-
-select * from location;

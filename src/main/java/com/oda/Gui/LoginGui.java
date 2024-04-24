@@ -66,6 +66,7 @@ public class LoginGui extends JFrame {
                 JOptionPane.showMessageDialog(null, String.format("You are now logged in as the user %s", usernameField.getText()), "Login successful", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
                 username = usernameField.getText();
+                System.out.printf("User now logged in as %s.%n", username);
 
                 SwingUtilities.invokeLater(() -> {
                     new MainGui(800, 600);
