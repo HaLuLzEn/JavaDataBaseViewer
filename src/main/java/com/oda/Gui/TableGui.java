@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.security.Key;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -14,7 +17,7 @@ import static com.oda.Main.imageIcon;
 public class TableGui extends JFrame {
     JTable table = new JTable();
 
-    public TableGui(int width, int height, ResultSet resultSet) throws SQLException {
+    public TableGui(int width, int height, ResultSet resultSet, JFrame frame) throws SQLException {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         setTitle("SQL Table");
@@ -48,6 +51,27 @@ public class TableGui extends JFrame {
         table.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(table);
         cp.add(scrollPane, BorderLayout.CENTER);
+
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    dispose();
+                    frame.requestFocus();
+                }
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
     }
 
 }

@@ -91,7 +91,7 @@ public class MainGui extends JFrame {
                 try {
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM `%s`;", tableList.getSelectedValue()));
-                    new TableGui(640, 480, resultSet);
+                    new TableGui(640, 480, resultSet, this);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -123,6 +123,35 @@ public class MainGui extends JFrame {
             } catch (SQLException ex) {
                 //ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Could not create a Dataset", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case (KeyEvent.VK_DOWN): {
+                        if (tableList.getSelectedIndex() > 0)
+                            tableList.setSelectedIndex(tableList.getSelectedIndex() - 1);
+                        break;
+                    }
+                    case (KeyEvent.VK_UP): {
+                        if (tableList.getSelectedIndex() <  tableArr.size())
+                            tableList.setSelectedIndex(tableList.getSelectedIndex() + 1);
+                        break;
+                    }
+
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
             }
         });
 
