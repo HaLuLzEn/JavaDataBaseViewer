@@ -33,6 +33,12 @@ public abstract class Panels {
         cp.add(c);
     }
 
+    public static void setComponentWithColor(JComponent c, Container cp, Color color, int x, int y, int width, int height) {
+        c.setBackground(color);
+        c.setBounds(x, y, width, height);
+        cp.add(c);
+    }
+
 
     public static void setComponentDefaultBackground(JComponent c, Container cp, int x, int y, int width, int height) {
         c.setBounds(x, y, width, height);
@@ -52,4 +58,6 @@ public abstract class Panels {
         tf.setText("Username");
 
     }
+
+
 }

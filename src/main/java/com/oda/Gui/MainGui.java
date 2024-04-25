@@ -2,8 +2,9 @@ package com.oda.Gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -27,28 +28,104 @@ public class MainGui extends JFrame {
         cp.setLayout(null);
 
         // Decleration of JComponents
-        JLabel loggedInLabel = new JLabel(String.format("<html>Logged in as %s</html>", username));
-        ArrayList<String> tableArr = new ArrayList<>();
-        ArrayList<String> columnArr = new ArrayList<>();
+        JLabel loggedInLabel = new JLabel(String.format("<html>Logged in as %s, using database %s</html>", username, database));
+        final ArrayList<String> tableArr = new ArrayList<>();
+        final ArrayList<String> columnArr = new ArrayList<>();
         listTables(tableArr);
-        JList<String> tableList = new JList<>(tableArr.toArray(new String[0]));
-        JList<String> columnList = new JList<>();
-        tableList.addListSelectionListener(e -> {
-            listColumns(columnArr, tableList.getSelectedValue());
-            columnList.setListData(columnArr.toArray(new String[0]));
-            columnArr.clear();
-        });
+        final JList<String> tableList = new JList<>(tableArr.toArray(new String[0]));
+        final JList<String> columnList = new JList<>();
+        final JLabel tableLabel = new JLabel("Tables");
+        final JLabel columnLabel = new JLabel("Columns");
+        final JButton tableButton = new JButton("Table view");
+        final JButton insertButton = new JButton("Create Dataset");
+        final JButton updateButton = new JButton("Modify Dataset");
+        final JButton deleteButton = new JButton("Remove Dataset");
+
 
         if (username.equals("root")) {
             String hexCode = "#FF0000";
-            loggedInLabel = new JLabel(String.format("<html>Logged in as <b><font color='%s'>%s</font></b></html>", hexCode, username));
+            loggedInLabel = new JLabel(String.format("<html>Logged in as <b><font color='%s'>%s</font></b>, using Database %s</html>", hexCode, username, database));
+            JOptionPane.showMessageDialog(null, String.format("<html>You are logged in as <b><font color='%s'>%s</font><b>. Be responsible with your privileges</html>", hexCode, username), "Warning", JOptionPane.WARNING_MESSAGE);
+            repaint();
+            revalidate();
         }
 
 
         // Setting bounds of JComponents
         Panels.setLabel(loggedInLabel, cp, bFont, 20, 20);
+        Panels.setLabel(tableLabel, cp, font, 20, 50);
+        Panels.setLabel(columnLabel, cp, font, 410, 50);
         Panels.setComponentDefaultBackground(tableList, cp, 20, 80, 350, 400);
         Panels.setComponentDefaultBackground(columnList, cp, 410, 80, 350, 400);
+        Panels.setComponentWithColor(tableButton, cp, Color.WHITE, 40, 500, 150, 30);
+        Panels.setComponentWithColor(insertButton, cp, Color.WHITE, 220, 500, 150, 30);
+        Panels.setComponentWithColor(updateButton, cp, Color.WHITE, 220, 500, 150, 30);
+        Panels.setComponentWithColor(deleteButton, cp, Color.WHITE, 220, 500, 150, 30);
+
+
+        // Adding ActionListeners to JComponents
+        tableList.addListSelectionListener(e -> {
+            columnArr.clear();
+            listColumns(columnArr, tableList.getSelectedValue());
+            columnList.setListData(columnArr.toArray(new String[0]));
+        });
+        tableList.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                    tableButton.doClick();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+        tableButton.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM `%s`;", tableList.getSelectedValue()));
+                    new TableGui(640, 480, resultSet);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+            });
+        });
+        insertButton.addActionListener(e -> {
+            try {
+                Statement statement = connection.createStatement();
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                stringBuilder.append(columnArr.get(1));
+                for (int i = 2; i < columnArr.size(); i++) {
+                    stringBuilder.append(", ").append(columnArr.get(i));
+                }
+                String columns = stringBuilder.toString();
+
+                SwingUtilities.invokeLater(() -> {
+                    setContentPane(new InsertPanel(columnArr, this, tableList.getSelectedValue()));
+                    repaint();
+                    revalidate();
+                });
+                setContentPane(cp);
+
+                String values = stringBuilder.toString();
+
+                //statement.execute(String.format("INSERT INTO %s(%s) VALUES (%s);", tableList.getSelectedValue(), columns, values));
+            } catch (SQLException ex) {
+                //ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Could not create a Dataset", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
     }
 
     void listTables(ArrayList<String> list) {
@@ -69,7 +146,6 @@ public class MainGui extends JFrame {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(String.format("SHOW COLUMNS FROM `%s`", tableName));
-
             while (resultSet.next()) {
                 list.add(resultSet.getString("Field"));
             }

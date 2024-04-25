@@ -127,9 +127,9 @@ create table order_article_rel (
 
 #Anlegen der Datensätze
 
-insert into location(`name`) values ('essen');
-insert into location(`name`) values ('berlin');
-insert into location(`name`) values ('köln');
+insert into location(`name`) values ('Essen');
+insert into location(`name`) values ('Hamburg');
+insert into location(`name`) values ('Frankfurt');
  
  insert into firm (`name`, location_id) values ('odFin', 1);
  insert into firm (`name`, location_id) values ('odITS', 1);
@@ -153,7 +153,3 @@ SELECT * from zipcode;
 select * from address;
 select * from department;
 select * from team;
-
-select * from mysql.user;
-
-select `user`,authentication_string,`plugin`,`host` from mysql.user;

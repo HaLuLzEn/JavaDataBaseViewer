@@ -11,7 +11,8 @@ public class Main {
     public static Font bFont = new Font("Arial", Font.PLAIN, 20);
     public static Font sFont = new Font("Arial", Font.PLAIN, 12);
     public static Connection connection = null;
-    public static String url = "jdbc:mysql://localhost:3306/webshop";
+    public static String database = "webshop";
+    public static String url = String.format("jdbc:mysql://localhost:3306/%s", database);
     public static ImageIcon imageIcon = new ImageIcon("icon.png");
 
     public static void main(String[] args) {

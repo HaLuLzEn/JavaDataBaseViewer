@@ -6,7 +6,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -41,13 +40,12 @@ public class LoginGui extends JFrame {
 
 
         // Setting locations of JComponents
-        cp.setBackground(Color.WHITE);
         Panels.setLabel(greetLabel, cp, font, 20, 20);
         Panels.setLabel(statusLabel, cp, sFont, 20, 40);
-        Panels.setComponent(cancleButton, cp, 130, 200, 100, 30);
-        Panels.setComponent(loginButton, cp, 15, 200, 100, 30);
-        Panels.setComponent(usernameField, cp, 20, 80, 100, 30);
-        Panels.setComponent(passwordField, cp, 20, 120, 100, 30);
+        Panels.setComponentWithColor(cancleButton, cp, Color.WHITE, 130, 200, 100, 30);
+        Panels.setComponentWithColor(loginButton, cp, Color.WHITE, 15, 200, 100, 30);
+        Panels.setComponentDefaultBackground(usernameField, cp, 20, 80, 100, 30);
+        Panels.setComponentDefaultBackground(passwordField, cp, 20, 120, 100, 30);
         Panels.usernameFocusLost(usernameField);
         Panels.passwordFocusLost(passwordField);
 
@@ -63,7 +61,10 @@ public class LoginGui extends JFrame {
                 statusLabel.setForeground(Color.GREEN);
                 repaint();
                 revalidate();
-                JOptionPane.showMessageDialog(null, String.format("You are now logged in as the user %s", usernameField.getText()), "Login successful", JOptionPane.INFORMATION_MESSAGE);
+                if (usernameField.getText().equals("root"))
+                    JOptionPane.showMessageDialog(null, String.format("<html>You are now logged in as the user <b><font color ='%s'>%s</font></b></html>", "#FF0000", usernameField.getText()));
+                else
+                    JOptionPane.showMessageDialog(null, String.format("You are now logged in as the user %s", usernameField.getText()), "Login successful", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
                 username = usernameField.getText();
                 System.out.printf("User now logged in as %s.%n", username);
@@ -88,8 +89,7 @@ public class LoginGui extends JFrame {
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (usernameField.getText().isEmpty())
-                    Panels.usernameFocusLost(usernameField);
+                if (usernameField.getText().isEmpty()) Panels.usernameFocusLost(usernameField);
             }
         });
         passwordField.addFocusListener(new FocusListener() {
@@ -101,11 +101,9 @@ public class LoginGui extends JFrame {
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (passwordField.getText().isEmpty())
-                    Panels.passwordFocusLost(passwordField);
+                if (passwordField.getText().isEmpty()) Panels.passwordFocusLost(passwordField);
             }
         });
-
         usernameField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -114,8 +112,20 @@ public class LoginGui extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    passwordField.requestFocus();
+                switch (e.getKeyCode()) {
+                    case (KeyEvent.VK_ENTER):
+                        if (passwordField.getText().isEmpty() || passwordField.getText().equals("Password"))
+                            passwordField.requestFocus();
+                        else
+                            loginButton.doClick();
+                        break;
+                    case (KeyEvent.VK_DOWN):
+                        passwordField.requestFocus();
+                        break;
+                    case (KeyEvent.VK_UP):
+                        getFrameFocus();
+                        break;
+
                 }
             }
 
@@ -132,8 +142,16 @@ public class LoginGui extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    loginButton.doClick();
+                switch (e.getKeyCode()) {
+                    case (KeyEvent.VK_ENTER):
+                        loginButton.doClick();
+                        break;
+                    case (KeyEvent.VK_DOWN):
+                        loginButton.requestFocus();
+                        break;
+                    case (KeyEvent.VK_UP):
+                        usernameField.requestFocus();
+                        break;
                 }
             }
 
@@ -143,6 +161,30 @@ public class LoginGui extends JFrame {
             }
         });
 
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
 
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    if (usernameField.getText().isEmpty() || usernameField.getText().equals("Username"))
+                        usernameField.requestFocus();
+                    else
+                        passwordField.requestFocus();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+    }
+
+    void getFrameFocus() {
+        this.requestFocus();
     }
 }
