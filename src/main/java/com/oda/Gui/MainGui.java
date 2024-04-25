@@ -8,11 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.oda.Gui.LoginGui.username;
 import static com.oda.Main.*;
 
 public class MainGui extends JFrame {
+    public static String columns = "";
+    public static String values = "";
+
     public MainGui(int width, int height) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -57,10 +61,10 @@ public class MainGui extends JFrame {
         Panels.setLabel(columnLabel, cp, font, 410, 50);
         Panels.setComponentDefaultBackground(tableList, cp, 20, 80, 350, 400);
         Panels.setComponentDefaultBackground(columnList, cp, 410, 80, 350, 400);
-        Panels.setComponentWithColor(tableButton, cp, Color.WHITE, 40, 500, 150, 30);
-        Panels.setComponentWithColor(insertButton, cp, Color.WHITE, 220, 500, 150, 30);
-        Panels.setComponentWithColor(updateButton, cp, Color.WHITE, 220, 500, 150, 30);
-        Panels.setComponentWithColor(deleteButton, cp, Color.WHITE, 220, 500, 150, 30);
+        Panels.setComponentWithColor(tableButton, cp, Color.WHITE, 45, 500, 150, 30);
+        Panels.setComponentWithColor(insertButton, cp, Color.WHITE, 225, 500, 150, 30);
+        Panels.setComponentWithColor(updateButton, cp, Color.WHITE, 405, 500, 150, 30);
+        Panels.setComponentWithColor(deleteButton, cp, Color.WHITE, 585, 500, 150, 30);
 
 
         // Adding ActionListeners to JComponents
@@ -90,40 +94,33 @@ public class MainGui extends JFrame {
             SwingUtilities.invokeLater(() -> {
                 try {
                     Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM `%s`;", tableList.getSelectedValue()));
+                    ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM %s;", tableList.getSelectedValue()));
                     new TableGui(640, 480, resultSet, this);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                } catch (SQLException | IndexOutOfBoundsException ex) {
+                    JOptionPane.showMessageDialog(null, "This table does not exist", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
             });
         });
         insertButton.addActionListener(e -> {
             try {
-                Statement statement = connection.createStatement();
-
                 StringBuilder stringBuilder = new StringBuilder();
 
-                stringBuilder.append(columnArr.get(1));
+                stringBuilder.append("`").append(columnArr.get(1)).append("`");
                 for (int i = 2; i < columnArr.size(); i++) {
-                    stringBuilder.append(", ").append(columnArr.get(i));
+                    stringBuilder.append(", ").append("`").append(columnArr.get(i)).append("`");
                 }
-                String columns = stringBuilder.toString();
+                columns = stringBuilder.toString();
 
                 SwingUtilities.invokeLater(() -> {
-                    setContentPane(new InsertPanel(columnArr, this, tableList.getSelectedValue()));
+                    setContentPane(new InsertPanel(columnArr, this, tableList.getSelectedValue(), cp));
                     repaint();
                     revalidate();
                 });
-                setContentPane(cp);
-
-                String values = stringBuilder.toString();
-
-                //statement.execute(String.format("INSERT INTO %s(%s) VALUES (%s);", tableList.getSelectedValue(), columns, values));
-            } catch (SQLException ex) {
-                //ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Could not create a Dataset", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IndexOutOfBoundsException ex) {
+                JOptionPane.showMessageDialog(null, "This table does not exist", "Error", JOptionPane.ERROR_MESSAGE);
             }
+
+
         });
 
         this.addKeyListener(new KeyListener() {
@@ -134,19 +131,57 @@ public class MainGui extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
+                JList<String> selectedList = tableList;
                 switch (e.getKeyCode()) {
                     case (KeyEvent.VK_UP): {
-                        if (tableList.getSelectedIndex() > 0)
-                            tableList.setSelectedIndex(tableList.getSelectedIndex() - 1);
+                        selectedList.requestFocus();
+                        if (selectedList.getSelectedIndex() > 0)
+                            selectedList.setSelectedIndex(tableList.getSelectedIndex() - 1);
                         break;
                     }
                     case (KeyEvent.VK_DOWN): {
-                        if (tableList.getSelectedIndex() <  tableArr.size())
-                            tableList.setSelectedIndex(tableList.getSelectedIndex() + 1);
+                        selectedList.requestFocus();
+                        if (selectedList.getSelectedIndex() < tableArr.size())
+                            selectedList.setSelectedIndex(selectedList.getSelectedIndex() + 1);
                         break;
                     }
-
                 }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+        tableList.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+                    columnList.requestFocus();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+        columnList.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_LEFT)
+                    tableList.requestFocus();
             }
 
             @Override
@@ -179,7 +214,7 @@ public class MainGui extends JFrame {
                 list.add(resultSet.getString("Field"));
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            System.out.printf(Arrays.toString(ex.getStackTrace()));
             JOptionPane.showMessageDialog(null, "Error loading columns", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
