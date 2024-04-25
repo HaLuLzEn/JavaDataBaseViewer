@@ -15,7 +15,7 @@ import java.util.Vector;
 import static com.oda.Main.imageIcon;
 
 public class TableGui extends JFrame {
-    JTable table = new JTable();
+    JTable table;
 
     public TableGui(int width, int height, ResultSet resultSet, JFrame frame) throws SQLException {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

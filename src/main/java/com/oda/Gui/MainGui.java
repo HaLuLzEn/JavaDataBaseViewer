@@ -135,12 +135,12 @@ public class MainGui extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case (KeyEvent.VK_DOWN): {
+                    case (KeyEvent.VK_UP): {
                         if (tableList.getSelectedIndex() > 0)
                             tableList.setSelectedIndex(tableList.getSelectedIndex() - 1);
                         break;
                     }
-                    case (KeyEvent.VK_UP): {
+                    case (KeyEvent.VK_DOWN): {
                         if (tableList.getSelectedIndex() <  tableArr.size())
                             tableList.setSelectedIndex(tableList.getSelectedIndex() + 1);
                         break;

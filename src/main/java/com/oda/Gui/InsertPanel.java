@@ -20,7 +20,7 @@ public class InsertPanel extends JPanel {
 
         Panels.setLabel(label, this, bFont,20,20);
 
-        for (int i = 1; i < textFields.length; i++) {
+        for (int i = 0; i < textFields.length; i++) {
             textFields[i] = new JTextField();
             final int ev = i;
             textFields[i].addFocusListener(new FocusListener() {
@@ -37,9 +37,9 @@ public class InsertPanel extends JPanel {
             });
         }
 
-        for (int i = 0; i < textFields.length; i++) {
+        for (int i = 1; i < textFields.length; i++) {
             textFields[i].setText(columns.get(i));
-            Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + (i * 40), 100, 20);
+            Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + ((i - 1)* 40), 100, 20);
             repaint();
             revalidate();
         }
