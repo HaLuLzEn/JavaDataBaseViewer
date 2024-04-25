@@ -6,11 +6,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-import static com.oda.Gui.Panels.setLabel;
 import static com.oda.Main.*;
 
 
@@ -20,22 +19,23 @@ public class LoginGui extends JFrame {
     public LoginGui(int width, int height) throws SQLException {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-
+        setTitle("DB login");
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(width, height);
         int x = (int) (d.getWidth() - width) / 2;
         int y = (int) (d.getHeight() - height) / 2;
         setLocation(x, y);
         setVisible(true);
-        JPanel cp = new JPanel();
-        setContentPane(cp);
+        Container cp = getContentPane();
+        setIconImage(imageIcon.getImage());
         cp.setLayout(null);
+
 
         // Declaration of JComponents
         final JButton loginButton = new JButton("Login");
         final JButton cancleButton = new JButton("Cancle");
-        final JLabel greetLabel = new JLabel("Log in");
-        final JLabel statusLabel = new JLabel("Log in using your DB credentials.");
+        final JLabel greetLabel = new JLabel("Login");
+        final JLabel statusLabel = new JLabel("Log in using your DB credentials");
         final JTextField usernameField = new JTextField();
         final JTextField passwordField = new JPasswordField();
 
@@ -55,7 +55,7 @@ public class LoginGui extends JFrame {
         // Adding Listeners to JComponents
         cancleButton.addActionListener(e -> System.exit(0));
 
-
+        this.requestFocus();
         loginButton.addActionListener(e -> {
             try {
                 connection = DriverManager.getConnection(url, usernameField.getText(), passwordField.getText());

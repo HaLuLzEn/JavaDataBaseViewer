@@ -34,6 +34,12 @@ public abstract class Panels {
     }
 
 
+    public static void setComponentDefaultBackground(JComponent c, Container cp, int x, int y, int width, int height) {
+        c.setBounds(x, y, width, height);
+        cp.add(c);
+    }
+
+
     public static void textFocusGained(JTextField tf) {
         tf.setText("");
     }
