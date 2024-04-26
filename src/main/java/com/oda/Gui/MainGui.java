@@ -119,7 +119,16 @@ public class MainGui extends JFrame {
             } catch (IndexOutOfBoundsException ex) {
                 JOptionPane.showMessageDialog(null, "This table does not exist", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        });
+        updateButton.addActionListener(e -> {
+            try {
+                int id = Integer.parseInt(JOptionPane.showInputDialog("Please provide the id of the dataset you want to modify"));
+                setContentPane(new ModifyPanel(id, tableList.getSelectedValue(), columnArr, this, cp));
+                repaint();
+                revalidate();
+            } catch (NumberFormatException ex) {
 
+            }
 
         });
 

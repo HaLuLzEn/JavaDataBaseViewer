@@ -45,5 +45,15 @@ public class Main {
             }
         }
     }
+
+    public static boolean isNumeric(String str) {
+        char[] charArray = str.toCharArray();
+        for (char c : charArray) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
