@@ -2,6 +2,8 @@ package com.oda.Gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -67,10 +69,45 @@ public class ModifyPanel extends JPanel {
 
                 TableGui tableGui = new TableGui(640, 480, resultSet, frame);
 
+                tableGui.addWindowListener(new WindowListener() {
+                    @Override
+                    public void windowOpened(WindowEvent e) {
+
+                    }
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+
+                    }
+
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        returnToGui(frame, cp);
+                    }
+
+                    @Override
+                    public void windowIconified(WindowEvent e) {
+
+                    }
+
+                    @Override
+                    public void windowDeiconified(WindowEvent e) {
+
+                    }
+
+                    @Override
+                    public void windowActivated(WindowEvent e) {
+
+                    }
+
+                    @Override
+                    public void windowDeactivated(WindowEvent e) {
+
+                    }
+                });
+
                 cancleButton.addActionListener(e -> {
-                    frame.setContentPane(cp);
-                    frame.repaint();
-                    frame.revalidate();
+                    returnToGui(frame, cp);
                     tableGui.dispose();
                 });
 
@@ -94,27 +131,27 @@ public class ModifyPanel extends JPanel {
 
 
                         JOptionPane.showMessageDialog(null, String.format("Inserted dataset to %s", table), "Dataset added", JOptionPane.INFORMATION_MESSAGE);
-                        frame.setContentPane(cp);
-                        frame.repaint();
-                        frame.revalidate();
+                        returnToGui(frame, cp);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                         JOptionPane.showMessageDialog(null, "Could not insert into table " + table, "Error", JOptionPane.ERROR_MESSAGE);
-                        frame.setContentPane(cp);
-                        frame.repaint();
-                        frame.revalidate();
+                        returnToGui(frame, cp);
                     }
                 });
 
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Could not get selected id", "Error", JOptionPane.ERROR_MESSAGE);
-                frame.setContentPane(cp);
-                repaint();
-                revalidate();
+                returnToGui(frame, cp);
             }
         });
 
 
 
+    }
+
+    void returnToGui(JFrame frame, Container cp) {
+        frame.setContentPane(cp);
+        frame.repaint();
+        frame.revalidate();
     }
 }

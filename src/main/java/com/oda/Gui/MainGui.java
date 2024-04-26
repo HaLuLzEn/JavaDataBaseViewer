@@ -127,9 +127,26 @@ public class MainGui extends JFrame {
                 repaint();
                 revalidate();
             } catch (NumberFormatException ex) {
-
+                System.out.println("User cancled Modify");
             }
+        });
+        deleteButton.addActionListener(e -> {
+            try {
+                int id = Integer.parseInt(JOptionPane.showInputDialog("<html>Please provide the id of the dataset you want to <b><font color='red'>delete</font></b></html>"));
 
+                if (JOptionPane.showConfirmDialog(null, "<html>Are you sure, you want to <b><font color='red'>delete</font></b> this dataset?</html>", "Warning", JOptionPane.YES_NO_OPTION) == 0) {
+                    try {
+                        Statement statement = connection.createStatement();
+                        statement.execute(String.format("DELETE FROM %s WHERE id = %d;", tableList.getSelectedValue(), id));
+                        JOptionPane.showMessageDialog(null, String.format("Deleted dataset with the id: %d from the table: %s", id, tableList.getSelectedValue()));
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Could not delete the dataset", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                System.out.println("Canceled deletion");
+            }
         });
 
         this.addKeyListener(new KeyListener() {
