@@ -94,7 +94,7 @@ public class MainGui extends JFrame {
             SwingUtilities.invokeLater(() -> {
                 try {
                     Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM %s;", tableList.getSelectedValue()));
+                    ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM `%s`;", tableList.getSelectedValue()));
                     new TableGui(640, 480, resultSet, this);
                 } catch (SQLException | IndexOutOfBoundsException ex) {
                     JOptionPane.showMessageDialog(null, "This table does not exist", "Error", JOptionPane.ERROR_MESSAGE);

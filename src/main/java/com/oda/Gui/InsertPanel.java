@@ -2,11 +2,6 @@ package com.oda.Gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.security.Key;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -15,28 +10,47 @@ import static com.oda.Gui.MainGui.columns;
 import static com.oda.Gui.MainGui.values;
 import static com.oda.Main.bFont;
 import static com.oda.Main.connection;
+import static com.oda.Main.font;
 
 public class InsertPanel extends JPanel {
     public InsertPanel(ArrayList<String> columnArr, JFrame frame, String table, Container cp) {
         setLayout(null);
         JLabel label = new JLabel(String.format("Create a Dataset for the table %s", table));
         JTextField[] textFields = new JTextField[columnArr.size()];
+        JLabel[] attributeLabel = new JLabel[textFields.length];
         JButton createButton = new JButton("Confirm");
         JButton cancleButton = new JButton("Cancle");
 
 
+
         // Setting up the JComponents
         Panels.setLabel(label, this, bFont, 20, 20);
-        Panels.setComponentWithColor(createButton, this, Color.WHITE, 40, 500, 150, 30);
-        Panels.setComponentWithColor(cancleButton, this, Color.WHITE, 220, 500, 150, 30);
+        Panels.setComponentWithColor(createButton, this, Color.WHITE, 45, 500, 150, 30);
+        Panels.setComponentWithColor(cancleButton, this, Color.WHITE, 215, 500, 150, 30);
         for (int i = 0; i < textFields.length; i++) {
             textFields[i] = new JTextField();
+            attributeLabel[i] = new JLabel();
         }
-        for (int i = 1; i < textFields.length; i++) {
-            textFields[i].setText(columnArr.get(i));
-            Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + ((i - 1) * 40), 100, 20);
-            repaint();
-            revalidate();
+        boolean first = false;
+        for (int i = 0; i < textFields.length; i++) {
+            if (!columnArr.get(i).equals("id") && i < 1) {
+                Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + ((i + 1) * 40), 100, 20);
+                Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160,55 + ((i + 1) * 40));
+                first = true;
+                repaint();
+                revalidate();
+            } else if (!columnArr.get(i).equals("id")) {
+                if (first) {
+                    Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + ((i + 1) * 40), 100, 20);
+                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160,55 + ((i + 1) * 40));
+                } else {
+                    Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + (i * 40), 100, 20);
+                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160,55 + (i * 40));
+                }
+
+                repaint();
+                revalidate();
+            }
         }
 
         // Adding Listeners to JComponents
