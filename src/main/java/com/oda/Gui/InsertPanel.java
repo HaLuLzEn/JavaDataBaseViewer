@@ -2,7 +2,11 @@ package com.oda.Gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -76,13 +80,66 @@ public class InsertPanel extends JPanel {
                 System.out.println(String.format("INSERT INTO `%s`(%s) VALUES (%s);", table, columns, values));
                 statement.execute(String.format("INSERT INTO `%s`(%s) VALUES (%s);", table, columns, values));
                 JOptionPane.showMessageDialog(null, String.format("Inserted dataset to %s", table), "Dataset added", JOptionPane.INFORMATION_MESSAGE);
-                frame.setContentPane(cp);
-                repaint();
-                revalidate();
+                showResult(frame, cp, table);
+            } catch (SQLSyntaxErrorException  ex) {
+                JOptionPane.showMessageDialog(null, "You do not have the privilege to create datasets on the table " + table, "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Could not insert into table " + table, "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+    }
+
+    void showResult(JFrame frame, Container cp, String table) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeQuery(String.format("SELECT * FROM `%s`;", table));
+            ResultSet resultSet = statement.getResultSet();
+            TableGui tableGui = new TableGui(640, 480, resultSet, frame);
+            tableGui.setTitle("Result Table");
+            tableGui.addWindowListener(new WindowListener() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    frame.setContentPane(cp);
+                    repaint();
+                    revalidate();
+                }
+
+                @Override
+                public void windowIconified(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowActivated(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+
+                }
+            });
+
+        } catch (SQLSyntaxErrorException ex) {
+            System.err.println("How did you get this error?");
+        } catch (SQLException ex) {
+            System.err.println("Now I am really confused");
+        }
     }
 }

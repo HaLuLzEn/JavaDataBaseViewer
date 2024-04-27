@@ -44,6 +44,7 @@ public class MainGui extends JFrame {
         final JButton insertButton = new JButton("Create Dataset");
         final JButton updateButton = new JButton("Modify Dataset");
         final JButton deleteButton = new JButton("Remove Dataset");
+        final JButton logoutButton = new JButton("Log out");
 
 
         if (username.equals("root")) {
@@ -127,7 +128,7 @@ public class MainGui extends JFrame {
                 repaint();
                 revalidate();
             } catch (NumberFormatException ex) {
-                System.out.println("User cancled Modify");
+                System.out.printf("User %s canceled dataset modification%n", username);
             }
         });
         deleteButton.addActionListener(e -> {
@@ -145,7 +146,7 @@ public class MainGui extends JFrame {
                     }
                 }
             } catch (NumberFormatException ex) {
-                System.out.println("Canceled deletion");
+                System.out.printf("User %s canceled dataset deletion%n", username);
             }
         });
 
@@ -215,6 +216,18 @@ public class MainGui extends JFrame {
 
             }
         });
+
+
+        // ROOT ONLY
+        if (username.equals("root")) {
+            JButton permsButton = new JButton("<html><font color='red'>Permission Management</font></html>");
+            Panels.setComponentWithColor(permsButton, cp, Color.WHITE, 420, 20, 150, 30);
+            permsButton.addActionListener(e -> {
+                AdminToolsGui a = new AdminToolsGui(640, 480, this);
+
+            });
+        }
+
 
     }
 

@@ -73,5 +73,4 @@ public class TableGui extends JFrame {
             }
         });
     }
-
 }

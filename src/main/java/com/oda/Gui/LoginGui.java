@@ -8,6 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLPermission;
+import java.sql.SQLSyntaxErrorException;
 
 import static com.oda.Main.*;
 
@@ -72,8 +74,13 @@ public class LoginGui extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     new MainGui(800, 600);
                 });
+            } catch (SQLSyntaxErrorException ex) {
+                Panels.setLabel(statusLabel, cp, sFont, String.format("Access denied", database), 20, 40);
+                statusLabel.setForeground(Color.RED);
+                repaint();
+                revalidate();
             } catch (SQLException ex) {
-                Panels.setLabel(statusLabel, cp, sFont, "Username or password incorrect.", 20, 40);
+                Panels.setLabel(statusLabel, cp, sFont, "Username or password incorrect", 20, 40);
                 statusLabel.setForeground(Color.RED);
                 repaint();
                 revalidate();
