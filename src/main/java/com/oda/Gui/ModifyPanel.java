@@ -68,6 +68,7 @@ public class ModifyPanel extends JPanel {
 
                 TableGui tableGui = new TableGui(640, 480, resultSet, frame);
 
+
                 tableGui.addWindowListener(new WindowListener() {
                     @Override
                     public void windowOpened(WindowEvent e) {

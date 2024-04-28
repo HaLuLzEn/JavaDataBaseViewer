@@ -10,7 +10,7 @@ public class PermissionGui extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         setTitle("SQL Permissions");
-        setIconImage(imageIcon.getImage());
+        setIconImage(imageIcon);
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(width, height);
         int x = (int) (d.getWidth() - width) / 2;

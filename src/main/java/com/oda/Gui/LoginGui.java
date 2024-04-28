@@ -14,7 +14,7 @@ import static com.oda.Main.*;
 public class LoginGui extends JFrame {
     public static String username = "username not found";
 
-    public LoginGui(int width, int height) throws SQLException {
+    public LoginGui(int width, int height){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setTitle("DB login");
@@ -25,7 +25,7 @@ public class LoginGui extends JFrame {
         setLocation(x, y);
         setVisible(true);
         Container cp = getContentPane();
-        setIconImage(imageIcon.getImage());
+        setIconImage(imageIcon);
         cp.setLayout(null);
 
 
@@ -50,7 +50,11 @@ public class LoginGui extends JFrame {
 
 
         // Adding Listeners to JComponents
-        cancleButton.addActionListener(e -> System.exit(0));
+        cancleButton.addActionListener(e -> {
+            dispose();
+            new ServerSelectorGui(300, 260);
+            System.out.println("Connected to the database!");
+        });
 
         this.requestFocus();
         loginButton.addActionListener(e -> {
@@ -72,6 +76,7 @@ public class LoginGui extends JFrame {
                     new MainGui(800, 600);
                 });
             } catch (SQLException ex) {
+                System.err.printf("Error code: %s%n", ex.getSQLState());
                 switch (ex.getSQLState()) {
                     case ("28000"): {
                         Panels.setLabel(statusLabel, cp, sFont, "Username or password incorrect", 20, 40);
@@ -87,7 +92,8 @@ public class LoginGui extends JFrame {
                         revalidate();
                         break;
                     }
-                    case ("08S01"): {
+                    case ("08S01"):
+                    case ("08001"): {
                         Panels.setLabel(statusLabel, cp, sFont, "Could not connect to the Address", 20, 40);
                         statusLabel.setForeground(Color.RED);
                         repaint();
