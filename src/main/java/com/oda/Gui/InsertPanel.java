@@ -24,7 +24,6 @@ public class InsertPanel extends JPanel {
         JButton cancleButton = new JButton("Cancle");
 
 
-
         // Setting up the JComponents
         Panels.setLabel(label, this, bFont, 20, 20);
         Panels.setComponentWithColor(createButton, this, Color.WHITE, 45, 500, 150, 30);
@@ -41,17 +40,17 @@ public class InsertPanel extends JPanel {
         for (int i = 0; i < textFields.length; i++) {
             if (!columnArr.get(i).equals("id") && i < 1) {
                 Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + ((i + 1) * 40), 100, 20);
-                Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160,55 + ((i + 1) * 40));
+                Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160, 55 + ((i + 1) * 40));
                 first = true;
                 repaint();
                 revalidate();
             } else if (!columnArr.get(i).equals("id")) {
                 if (first) {
                     Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + ((i + 1) * 40), 100, 20);
-                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160,55 + ((i + 1) * 40));
+                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160, 55 + ((i + 1) * 40));
                 } else {
                     Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + (i * 40), 100, 20);
-                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160,55 + (i * 40));
+                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160, 55 + (i * 40));
                 }
 
                 repaint();
@@ -81,11 +80,20 @@ public class InsertPanel extends JPanel {
                 statement.execute(String.format("INSERT INTO `%s`(%s) VALUES (%s);", table, columns, values));
                 JOptionPane.showMessageDialog(null, String.format("Inserted dataset to %s", table), "Dataset added", JOptionPane.INFORMATION_MESSAGE);
                 showResult(frame, cp, table);
-            } catch (SQLSyntaxErrorException  ex) {
-                JOptionPane.showMessageDialog(null, "You do not have the privilege to create datasets on the table " + table, "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Could not insert into table " + table, "Error", JOptionPane.ERROR_MESSAGE);
+                switch (ex.getSQLState()) {
+                    case ("42000"): {
+                        JOptionPane.showMessageDialog(null, "You do not have the privilege to create datasets on the table " + table, "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                    default: {
+                        System.err.printf("Error code: %s%n", ex.getSQLState());
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Could not insert into table " + table, "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                }
+
             }
         });
     }

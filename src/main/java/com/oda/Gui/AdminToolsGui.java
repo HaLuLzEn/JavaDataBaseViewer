@@ -8,13 +8,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 
+import static com.oda.Gui.LoginGui.username;
 import static com.oda.Main.*;
 
 public class AdminToolsGui extends JFrame {
     public AdminToolsGui(int width, int height, JFrame frame) {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
-        setTitle("SQL Permissions");
+        setTitle("SQL Admin Tools");
         setIconImage(imageIcon.getImage());
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(width, height);
@@ -27,7 +28,7 @@ public class AdminToolsGui extends JFrame {
 
 
         // Declaring the JComponents
-        final JLabel label = new JLabel("Permission management");
+        final JLabel label = new JLabel("Admin Tools");
         final JLabel usersLabel = new JLabel("Users");
         final JLabel permsLabel = new JLabel("Granted Permissions");
         final JList<String> users = new JList<>();
@@ -39,7 +40,6 @@ public class AdminToolsGui extends JFrame {
         final JButton revokePermission = new JButton("Revoke permission");
 
 
-
         // Setting up the JComponents
         Panels.setLabel(label, cp, bFont, 20, 20);
         Panels.setLabel(usersLabel, cp, font, 20, 50);
@@ -47,7 +47,11 @@ public class AdminToolsGui extends JFrame {
         Panels.setComponentDefaultBackground(users, cp, 20, 80, 250, 300);
         Panels.setComponentDefaultBackground(perms, cp, 355, 80, 250, 300);
         Panels.setComponentWithColor(tableViewButton, cp, Color.WHITE, 450, 20, 150, 30);
+        Panels.setComponentWithColor(grantButton, cp, Color.WHITE, 20, 400, 150, 30);
+        Panels.setComponentWithColor(revokePermission, cp, Color.WHITE, 200, 400, 150, 30);
         addUsers(usersArr, users);
+        repaint();
+        revalidate();
 
         // Adding ActionListeners to the JComponents
         users.addListSelectionListener(e -> {
@@ -61,7 +65,11 @@ public class AdminToolsGui extends JFrame {
                 TableGui tableGui = new TableGui(640, 480, resultSet, this);
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Could not create a Table", "Error", JOptionPane.ERROR_MESSAGE);
+                System.err.printf("Error code: %s", ex.getSQLState());
             }
+        });
+        grantButton.addActionListener(e -> {
+            new PermissionGui(640, 480, this);
         });
 
     }

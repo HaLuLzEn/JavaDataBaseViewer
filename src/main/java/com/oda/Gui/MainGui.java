@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 
 import static com.oda.Gui.LoginGui.username;
 import static com.oda.Main.*;
@@ -33,7 +33,7 @@ public class MainGui extends JFrame {
 
         // Decleration of JComponents
         JLabel loggedInLabel = new JLabel(String.format("<html>Logged in as %s, using database %s</html>", username, database));
-        final ArrayList<String> tableArr = new ArrayList<>();
+        final HashSet<String> tableArr = new HashSet<>();
         final ArrayList<String> columnArr = new ArrayList<>();
         listTables(tableArr);
         final JList<String> tableList = new JList<>(tableArr.toArray(new String[0]));
@@ -45,6 +45,7 @@ public class MainGui extends JFrame {
         final JButton updateButton = new JButton("Modify Dataset");
         final JButton deleteButton = new JButton("Remove Dataset");
         final JButton logoutButton = new JButton("Log out");
+        final JButton switchUserButton = new JButton("Switch user");
 
 
         if (username.equals("root")) {
@@ -66,6 +67,8 @@ public class MainGui extends JFrame {
         Panels.setComponentWithColor(insertButton, cp, Color.WHITE, 225, 500, 150, 30);
         Panels.setComponentWithColor(updateButton, cp, Color.WHITE, 405, 500, 150, 30);
         Panels.setComponentWithColor(deleteButton, cp, Color.WHITE, 585, 500, 150, 30);
+        Panels.setComponentWithColor(logoutButton, cp, Color.WHITE, 630, 15, 130, 20);
+        Panels.setComponentWithColor(switchUserButton, cp, Color.WHITE, 630, 40, 130, 20);
 
 
         // Adding ActionListeners to JComponents
@@ -141,12 +144,31 @@ public class MainGui extends JFrame {
                         statement.execute(String.format("DELETE FROM %s WHERE id = %d;", tableList.getSelectedValue(), id));
                         JOptionPane.showMessageDialog(null, String.format("Deleted dataset with the id: %d from the table: %s", id, tableList.getSelectedValue()));
                     } catch (SQLException ex) {
-                        ex.printStackTrace();
+                        System.err.printf("Error code: %s", ex.getSQLState());
                         JOptionPane.showMessageDialog(null, "Could not delete the dataset", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             } catch (NumberFormatException ex) {
                 System.out.printf("User %s canceled dataset deletion%n", username);
+            }
+        });
+        logoutButton.addActionListener(e -> {
+            if (JOptionPane.showConfirmDialog(null, "Do want to log out?", "Confirm", JOptionPane.YES_NO_OPTION) < 1) {
+                System.out.printf("User %s logged out%n", username);
+                dispose();
+                System.exit(0);
+            }
+        });
+        switchUserButton.addActionListener(e -> {
+            if (JOptionPane.showConfirmDialog(null, "Do want to switch accounts?", "Confirm", JOptionPane.YES_NO_OPTION) < 1) {
+                System.out.printf("User %s is switching accounts%n", username);
+                dispose();
+                try {
+                    connection.close();
+                    new LoginGui(260, 300);
+                } catch (SQLException ex) {
+                    System.err.printf("Error code: %s", ex.getSQLState());
+                }
             }
         });
 
@@ -220,8 +242,8 @@ public class MainGui extends JFrame {
 
         // ROOT ONLY
         if (username.equals("root")) {
-            JButton permsButton = new JButton("<html><font color='red'>Permission Management</font></html>");
-            Panels.setComponentWithColor(permsButton, cp, Color.WHITE, 420, 20, 150, 30);
+            JButton permsButton = new JButton("<html><font color='red'>Admin Tools</font></html>");
+            Panels.setComponentWithColor(permsButton, cp, Color.WHITE, 525, 20, 100, 30);
             permsButton.addActionListener(e -> {
                 AdminToolsGui a = new AdminToolsGui(640, 480, this);
 
@@ -231,7 +253,7 @@ public class MainGui extends JFrame {
 
     }
 
-    void listTables(ArrayList<String> list) {
+    void listTables(HashSet<String> list) {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema = 'webshop';");
@@ -242,6 +264,7 @@ public class MainGui extends JFrame {
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Tables could not be loaded", "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.printf("Error code: %s", ex.getSQLState());
         }
     }
 
@@ -253,8 +276,9 @@ public class MainGui extends JFrame {
                 list.add(resultSet.getString("Field"));
             }
         } catch (SQLException ex) {
-            System.out.printf(Arrays.toString(ex.getStackTrace()));
+            System.err.printf("Error code: %s", ex.getSQLState());
             JOptionPane.showMessageDialog(null, "Error loading columns", "Error", JOptionPane.ERROR_MESSAGE);
+
         }
     }
 }

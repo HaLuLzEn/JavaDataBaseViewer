@@ -6,10 +6,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.SQLPermission;
-import java.sql.SQLSyntaxErrorException;
+import java.sql.*;
 
 import static com.oda.Main.*;
 
@@ -74,16 +71,39 @@ public class LoginGui extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     new MainGui(800, 600);
                 });
-            } catch (SQLSyntaxErrorException ex) {
-                Panels.setLabel(statusLabel, cp, sFont, String.format("Access denied", database), 20, 40);
-                statusLabel.setForeground(Color.RED);
-                repaint();
-                revalidate();
             } catch (SQLException ex) {
-                Panels.setLabel(statusLabel, cp, sFont, "Username or password incorrect", 20, 40);
-                statusLabel.setForeground(Color.RED);
-                repaint();
-                revalidate();
+                switch (ex.getSQLState()) {
+                    case ("28000"): {
+                        Panels.setLabel(statusLabel, cp, sFont, "Username or password incorrect", 20, 40);
+                        statusLabel.setForeground(Color.RED);
+                        repaint();
+                        revalidate();
+                        break;
+                    }
+                    case ("42000"): {
+                        Panels.setLabel(statusLabel, cp, sFont, "Access denied", 20, 40);
+                        statusLabel.setForeground(Color.RED);
+                        repaint();
+                        revalidate();
+                        break;
+                    }
+                    case ("08S01"): {
+                        Panels.setLabel(statusLabel, cp, sFont, "Could not connect to the Address", 20, 40);
+                        statusLabel.setForeground(Color.RED);
+                        repaint();
+                        revalidate();
+                        break;
+                    }
+                    default: {
+                        Panels.setLabel(statusLabel, cp, sFont, "An unknown error occurred", 20, 40);
+                        statusLabel.setForeground(Color.RED);
+                        repaint();
+                        revalidate();
+                    }
+
+                    System.out.println(ex.getSQLState());
+                }
+
             }
         });
 

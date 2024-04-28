@@ -130,11 +130,13 @@ public class ModifyPanel extends JPanel {
                         }
 
 
-                        JOptionPane.showMessageDialog(null, String.format("Inserted dataset to %s", table), "Dataset added", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, String.format("Modified dataset in %s", table), "Dataset added", JOptionPane.INFORMATION_MESSAGE);
                         returnToGui(frame, cp);
+                        tableGui.dispose();
                     } catch (SQLException ex) {
+                        System.err.printf("Error code: %s%n", ex.getSQLState());
                         ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Could not insert into table " + table, "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, String.format("Could not modify dataset in %s", table), "Error", JOptionPane.ERROR_MESSAGE);
                         returnToGui(frame, cp);
                     }
                 });
