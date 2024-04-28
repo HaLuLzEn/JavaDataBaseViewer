@@ -76,7 +76,6 @@ public class InsertPanel extends JPanel {
                         stringBuilder.append(", " + "'" + textFields[i].getText() + "'");
                 }
                 values = stringBuilder.toString();
-                System.out.println(String.format("INSERT INTO `%s`(%s) VALUES (%s);", table, columns, values));
                 statement.execute(String.format("INSERT INTO `%s`(%s) VALUES (%s);", table, columns, values));
                 JOptionPane.showMessageDialog(null, String.format("Inserted dataset to %s", table), "Dataset added", JOptionPane.INFORMATION_MESSAGE);
                 showResult(frame, cp, table);
@@ -93,7 +92,6 @@ public class InsertPanel extends JPanel {
                         break;
                     }
                 }
-
             }
         });
     }

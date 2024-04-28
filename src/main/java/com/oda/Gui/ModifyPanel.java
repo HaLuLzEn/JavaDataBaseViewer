@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import static com.oda.Gui.MainGui.columns;
 import static com.oda.Gui.MainGui.values;
 import static com.oda.Main.*;
 import static com.oda.Main.font;
@@ -41,17 +40,17 @@ public class ModifyPanel extends JPanel {
         for (int i = 0; i < textFields.length; i++) {
             if (!columnArr.get(i).equals("id") && i < 1) {
                 Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + ((i + 1) * 40), 100, 20);
-                Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160,55 + ((i + 1) * 40));
+                Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160, 55 + ((i + 1) * 40));
                 first = true;
                 repaint();
                 revalidate();
             } else if (!columnArr.get(i).equals("id")) {
                 if (first) {
                     Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + ((i + 1) * 40), 100, 20);
-                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160,55 + ((i + 1) * 40));
+                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160, 55 + ((i + 1) * 40));
                 } else {
                     Panels.setComponentWithColor(textFields[i], this, Color.WHITE, 20, 60 + (i * 40), 100, 20);
-                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160,55 + (i * 40));
+                    Panels.setLabel(attributeLabel[i], this, font, columnArr.get(i), 160, 55 + (i * 40));
                 }
 
                 repaint();
@@ -128,16 +127,24 @@ public class ModifyPanel extends JPanel {
                             else if (!textFields[i].getText().isEmpty())
                                 statement.execute(String.format("UPDATE `%s` SET `%s` = '%s' WHERE id = %d;", table, columnArr.get(i), textFields[i].getText(), id));
                         }
-
-
+                        
                         JOptionPane.showMessageDialog(null, String.format("Modified dataset in %s", table), "Dataset added", JOptionPane.INFORMATION_MESSAGE);
                         returnToGui(frame, cp);
                         tableGui.dispose();
                     } catch (SQLException ex) {
-                        System.err.printf("Error code: %s%n", ex.getSQLState());
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, String.format("Could not modify dataset in %s", table), "Error", JOptionPane.ERROR_MESSAGE);
-                        returnToGui(frame, cp);
+                        switch (ex.getSQLState()) {
+                            case ("23000"): {
+                                JOptionPane.showMessageDialog(null, "Could not find given columns", "Error", JOptionPane.ERROR_MESSAGE);
+                                break;
+                            }
+                            default: {
+                                System.err.printf("Error code: %s%n", ex.getSQLState());
+                                ex.printStackTrace();
+                                JOptionPane.showMessageDialog(null, String.format("Could not modify dataset in %s", table), "Error", JOptionPane.ERROR_MESSAGE);
+                                returnToGui(frame, cp);
+                            }
+                        }
+
                     }
                 });
 
@@ -146,7 +153,6 @@ public class ModifyPanel extends JPanel {
                 returnToGui(frame, cp);
             }
         });
-
 
 
     }

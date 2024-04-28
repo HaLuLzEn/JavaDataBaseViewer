@@ -153,14 +153,14 @@ public class MainGui extends JFrame {
             }
         });
         logoutButton.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(null, "Do want to log out?", "Confirm", JOptionPane.YES_NO_OPTION) < 1) {
+            if (JOptionPane.showConfirmDialog(null, "Do want to log out?", "Confirm", JOptionPane.YES_NO_OPTION) == 0) {
                 System.out.printf("User %s logged out%n", username);
                 dispose();
                 System.exit(0);
             }
         });
         switchUserButton.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(null, "Do want to switch accounts?", "Confirm", JOptionPane.YES_NO_OPTION) < 1) {
+            if (JOptionPane.showConfirmDialog(null, "Do want to switch accounts?", "Confirm", JOptionPane.YES_NO_OPTION) == 0) {
                 System.out.printf("User %s is switching accounts%n", username);
                 dispose();
                 try {
