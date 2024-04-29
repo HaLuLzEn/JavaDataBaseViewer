@@ -52,7 +52,7 @@ public class LoginGui extends JFrame {
         // Adding Listeners to JComponents
         cancleButton.addActionListener(e -> {
             dispose();
-            new ServerSelectorGui(300, 260 ,true);
+            new ServerSelectorGui(260, 300 ,true);
             System.out.println("Connected to the database!");
         });
 
@@ -158,7 +158,8 @@ public class LoginGui extends JFrame {
                     case (KeyEvent.VK_UP):
                         getFrameFocus();
                         break;
-
+                    case (KeyEvent.VK_ESCAPE):
+                        cancleButton.doClick();
                 }
             }
 
@@ -185,6 +186,8 @@ public class LoginGui extends JFrame {
                     case (KeyEvent.VK_UP):
                         usernameField.requestFocus();
                         break;
+                    case (KeyEvent.VK_ESCAPE):
+                        cancleButton.doClick();
                 }
             }
 
@@ -207,6 +210,9 @@ public class LoginGui extends JFrame {
                         usernameField.requestFocus();
                     else
                         passwordField.requestFocus();
+                } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if ((!usernameField.getText().isEmpty() && !usernameField.getText().equals("Username")) && (!passwordField.getText().isEmpty() && !passwordField.getText().equals("Password")))
+                        loginButton.doClick();
                 }
             }
 

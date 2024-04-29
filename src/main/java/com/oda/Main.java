@@ -14,9 +14,9 @@ public class Main {
     public static Font bFont = new Font("Arial", Font.PLAIN, 20);
     public static Font sFont = new Font("Arial", Font.PLAIN, 12);
     public static Connection connection = null;
-    public static String database;
-    public static String port;
-    public static String address;
+    public static String database = "";
+    public static String port = "";
+    public static String address = "";
     public static String url = String.format("jdbc:mysql://%s:%s/%s", address, port, database);
     public static Image imageIcon;
 
@@ -29,7 +29,7 @@ public class Main {
 
             // Connect to the database
             SwingUtilities.invokeLater(() -> {
-                new ServerSelectorGui(300, 260, false);
+                new ServerSelectorGui(260, 300, false);
             });
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

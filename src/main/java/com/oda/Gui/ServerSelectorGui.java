@@ -1,12 +1,13 @@
 package com.oda.Gui;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -33,13 +34,15 @@ public class ServerSelectorGui extends JFrame {
         final JLabel label = new JLabel("Provide the Server details");
         final JTextField serverField = new JTextField("Server Address");
         final JTextField portField = new JTextField("Port");
+        final JLabel addressLabel = new JLabel(url);
 
         // Setting up the JComponents
         Panels.setLabel(label, cp, font, 20, 20);
-        Panels.setComponentWithColor(selectButton, cp, Color.WHITE, 20, 175, 75, 30);
-        Panels.setComponentWithColor(cancleButton, cp, Color.WHITE, 190, 175, 75, 30);
-        Panels.setComponentDefaultBackground(serverField, cp, 20, 75, 100, 30);
-        Panels.setComponentDefaultBackground(portField, cp, 165, 75, 100, 30);
+        Panels.setComponentWithColor(cancleButton, cp, Color.WHITE, 130, 200, 100, 30);
+        Panels.setComponentWithColor(selectButton, cp, Color.WHITE, 15, 200, 100, 30);
+        Panels.setComponentDefaultBackground(serverField, cp, 20, 80, 100, 30);
+        Panels.setComponentDefaultBackground(portField, cp, 20, 120, 100, 30);
+        Panels.setLabel(addressLabel, cp, font, 20, 160);
         if (switchBack) {
             serverField.setText(address);
             portField.setText(port);
@@ -61,16 +64,34 @@ public class ServerSelectorGui extends JFrame {
         cancleButton.addActionListener(e -> {
             System.exit(0);
         });
+        serverField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateLabel(addressLabel, serverField, portField, cp);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateLabel(addressLabel, serverField, portField, cp);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateLabel(addressLabel, serverField, portField, cp);
+            }
+        });
         serverField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (serverField.getText().isEmpty() || serverField.getText().equals("Server Address"))
                     Panels.textFocusGained(serverField);
+                updateLabel(addressLabel, serverField, portField, cp);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (serverField.getText().isEmpty()) Panels.serverFocusLost(serverField);
+                updateLabel(addressLabel, serverField, portField, cp);
             }
         });
         portField.addFocusListener(new FocusListener() {
@@ -78,11 +99,13 @@ public class ServerSelectorGui extends JFrame {
             public void focusGained(FocusEvent e) {
                 if (portField.getText().isEmpty() || portField.getText().equals("Port"))
                     Panels.textFocusGained(portField);
+                updateLabel(addressLabel, serverField, portField, cp);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (portField.getText().isEmpty()) Panels.portFocusLost(portField);
+                updateLabel(addressLabel, serverField, portField, cp);
             }
         });
         serverField.addKeyListener(new KeyListener() {
@@ -124,7 +147,7 @@ public class ServerSelectorGui extends JFrame {
                         selectButton.doClick();
                         break;
                     case (KeyEvent.VK_DOWN):
-                        selectButton.requestFocus();
+                        getFrameFocus();
                         break;
                     case (KeyEvent.VK_UP):
                         serverField.requestFocus();
@@ -151,7 +174,13 @@ public class ServerSelectorGui extends JFrame {
                         serverField.requestFocus();
                     else
                         portField.requestFocus();
+                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    cancleButton.doClick();
+                else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if ((!serverField.getText().isEmpty() && !serverField.getText().equals("Server Address")) && (!portField.getText().isEmpty() && !portField.getText().equals("Port")))
+                        selectButton.doClick();
                 }
+
             }
 
             @Override
@@ -160,6 +189,18 @@ public class ServerSelectorGui extends JFrame {
             }
         });
 
+    }
+
+    void getFrameFocus() {
+        this.requestFocus();
+    }
+
+    void updateLabel(JLabel label, JTextField serverField, JTextField portField, Container cp) {
+        address = serverField.getText();
+        port = portField.getText();
+        label.setText(url);
+        cp.repaint();
+        cp.revalidate();
     }
 
 }

@@ -3,6 +3,9 @@ package com.oda.Gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.security.Key;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -30,28 +33,80 @@ public class DatabaseSelectorGui extends JFrame {
         final JButton cancleButton = new JButton("Cancle");
         final JComboBox<String> comboBox = new JComboBox<>();
         final HashSet<String> databases = new HashSet<>();
+        final JLabel label = new JLabel("Select a database");
 
         // Setting up JComponents
-        Panels.setComponentWithColor(selectButton, cp, Color.WHITE, 20, 200, 75, 30);
-        Panels.setComponentWithColor(cancleButton, cp, Color.WHITE, 150, 200, 75, 30);
+        Panels.setComponentWithColor(cancleButton, cp, Color.WHITE, 130, 200, 100, 30);
+        Panels.setComponentWithColor(selectButton, cp, Color.WHITE, 15, 200, 100, 30);
         Panels.setComponentWithColor(comboBox, cp, Color.WHITE, 45, 100, 150, 20);
+        Panels.setLabel(label, cp, font, 20, 20);
         listDatabases(databases, comboBox);
 
         // Adding listeners to JComponents
         cancleButton.addActionListener(e -> {
             dispose();
-            new ServerSelectorGui(300, 260, true);
+            new LoginGui(260, 300);
         });
         selectButton.addActionListener(e -> {
             database = Objects.requireNonNull(comboBox.getSelectedItem()).toString();
             try {
                 Statement statement = connection.createStatement();
                 statement.execute(String.format("USE %s", database));
-                System.out.printf("USE %s", database);
                 dispose();
                 new MainGui(800, 600);
             } catch (SQLException ex) {
                 System.err.printf("Error code: %s%n", ex.getSQLState());
+            }
+        });
+
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case (KeyEvent.VK_DOWN): {
+                        comboBox.requestFocus();
+                        break;
+                    }
+                    case (KeyEvent.VK_ENTER): {
+                        getFrameFocus();
+                        break;
+                    }
+                    case (KeyEvent.VK_ESCAPE): {
+                        cancleButton.doClick();
+                        break;
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+        comboBox.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                    getFrameFocus();
+                else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    getFrameFocus();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
             }
         });
 
@@ -70,8 +125,19 @@ public class DatabaseSelectorGui extends JFrame {
             for (String s: hashSet) {
                 comboBox.addItem(s);
             }
-        } catch (SQLException ex) {
 
+            if (comboBox.getItemCount() <= 2) {
+                JOptionPane.showMessageDialog(null, "You do not have the privelege to any database", "Warnig", JOptionPane.WARNING_MESSAGE);
+                dispose();
+                new LoginGui(260, 300);
+            }
+        } catch (SQLException ex) {
+            System.out.printf("Error code: %s%n", ex.getSQLState());
+            ex.printStackTrace();
         }
+    }
+
+    void getFrameFocus() {
+        this.requestFocus();
     }
 }
