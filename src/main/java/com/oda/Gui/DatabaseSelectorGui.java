@@ -40,7 +40,7 @@ public class DatabaseSelectorGui extends JFrame {
         // Adding listeners to JComponents
         cancleButton.addActionListener(e -> {
             dispose();
-            new ServerSelectorGui(300, 260);
+            new ServerSelectorGui(300, 260, true);
         });
         selectButton.addActionListener(e -> {
             database = Objects.requireNonNull(comboBox.getSelectedItem()).toString();
@@ -48,6 +48,7 @@ public class DatabaseSelectorGui extends JFrame {
                 Statement statement = connection.createStatement();
                 statement.execute(String.format("USE %s", database));
                 System.out.printf("USE %s", database);
+                dispose();
                 new MainGui(800, 600);
             } catch (SQLException ex) {
                 System.err.printf("Error code: %s%n", ex.getSQLState());

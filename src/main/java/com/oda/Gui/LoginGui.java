@@ -52,7 +52,7 @@ public class LoginGui extends JFrame {
         // Adding Listeners to JComponents
         cancleButton.addActionListener(e -> {
             dispose();
-            new ServerSelectorGui(300, 260);
+            new ServerSelectorGui(300, 260 ,true);
             System.out.println("Connected to the database!");
         });
 

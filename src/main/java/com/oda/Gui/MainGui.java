@@ -46,6 +46,8 @@ public class MainGui extends JFrame {
         final JButton deleteButton = new JButton("Remove Dataset");
         final JButton logoutButton = new JButton("Log out");
         final JButton switchUserButton = new JButton("Switch user");
+        final JScrollPane tablePane = new JScrollPane(tableList);
+        final JScrollPane columnPane = new JScrollPane(columnList);
 
 
         if (username.equals("root")) {
@@ -61,8 +63,8 @@ public class MainGui extends JFrame {
         Panels.setLabel(loggedInLabel, cp, bFont, 20, 20);
         Panels.setLabel(tableLabel, cp, font, 20, 50);
         Panels.setLabel(columnLabel, cp, font, 410, 50);
-        Panels.setComponentDefaultBackground(tableList, cp, 20, 80, 350, 400);
-        Panels.setComponentDefaultBackground(columnList, cp, 410, 80, 350, 400);
+        Panels.setComponentDefaultBackground(tablePane, cp, 20, 80, 350, 400);
+        Panels.setComponentDefaultBackground(columnPane, cp, 410, 80, 350, 400);
         Panels.setComponentWithColor(tableButton, cp, Color.WHITE, 45, 500, 150, 30);
         Panels.setComponentWithColor(insertButton, cp, Color.WHITE, 225, 500, 150, 30);
         Panels.setComponentWithColor(updateButton, cp, Color.WHITE, 405, 500, 150, 30);
@@ -256,7 +258,7 @@ public class MainGui extends JFrame {
     void listTables(HashSet<String> list) {
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema = 'webshop';");
+            ResultSet resultSet = statement.executeQuery(String.format("SELECT table_name FROM information_schema.tables WHERE table_schema = '%s';", database));
 
             while (resultSet.next()) {
                 list.add(resultSet.getString("table_name"));

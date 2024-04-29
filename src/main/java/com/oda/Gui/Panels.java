@@ -56,7 +56,14 @@ public abstract class Panels {
 
     public static void usernameFocusLost(JTextField tf) {
         tf.setText("Username");
+    }
 
+    public static void serverFocusLost(JTextField tf) {
+        tf.setText("Server Address");
+    }
+
+    public static void portFocusLost(JTextField tf) {
+        tf.setText("Port");
     }
 
 

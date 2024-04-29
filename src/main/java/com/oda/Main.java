@@ -29,7 +29,7 @@ public class Main {
 
             // Connect to the database
             SwingUtilities.invokeLater(() -> {
-                new ServerSelectorGui(300, 260);
+                new ServerSelectorGui(300, 260, false);
             });
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
