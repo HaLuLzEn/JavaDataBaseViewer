@@ -46,10 +46,10 @@ public class ServerSelectorGui extends JFrame {
             SwingUtilities.invokeLater(() -> {
                 address = serverField.getText();
                 port = portField.getText();
-                //database = databaseField.getText();
+                database = databaseField.getText();
                 url = String.format("jdbc:mysql://%s:%s", address, port);
                 dispose();
-                new DatabaseSelectorGui(260, 300);
+                new LoginGui(260, 300);
 
             });
         });

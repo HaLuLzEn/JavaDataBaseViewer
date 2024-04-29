@@ -276,7 +276,8 @@ public class MainGui extends JFrame {
                 list.add(resultSet.getString("Field"));
             }
         } catch (SQLException ex) {
-            System.err.printf("Error code: %s", ex.getSQLState());
+            ex.printStackTrace();
+            System.err.printf("Error code: %s%n", ex.getSQLState());
             JOptionPane.showMessageDialog(null, "Error loading columns", "Error", JOptionPane.ERROR_MESSAGE);
 
         }

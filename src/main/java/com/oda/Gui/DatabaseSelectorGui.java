@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Objects;
 
 import static com.oda.Main.*;
 
@@ -41,6 +42,17 @@ public class DatabaseSelectorGui extends JFrame {
             dispose();
             new ServerSelectorGui(300, 260);
         });
+        selectButton.addActionListener(e -> {
+            database = Objects.requireNonNull(comboBox.getSelectedItem()).toString();
+            try {
+                Statement statement = connection.createStatement();
+                statement.execute(String.format("USE %s", database));
+                System.out.printf("USE %s", database);
+                new MainGui(800, 600);
+            } catch (SQLException ex) {
+                System.err.printf("Error code: %s%n", ex.getSQLState());
+            }
+        });
 
     }
 
@@ -52,8 +64,6 @@ public class DatabaseSelectorGui extends JFrame {
 
             while (resultSet.next()) {
                 hashSet.add(resultSet.getString(1));
-                System.out.println(resultSet.getString(1));
-                System.out.println("test");
             }
 
             for (String s: hashSet) {

@@ -73,7 +73,7 @@ public class LoginGui extends JFrame {
                 System.out.printf("User now logged in as %s.%n", username);
 
                 SwingUtilities.invokeLater(() -> {
-                    new MainGui(800, 600);
+                    new DatabaseSelectorGui(260, 300);
                 });
             } catch (SQLException ex) {
                 System.err.printf("Error code: %s%n", ex.getSQLState());
