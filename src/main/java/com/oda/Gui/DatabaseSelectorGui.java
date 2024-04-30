@@ -1,11 +1,9 @@
 package com.oda.Gui;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.security.Key;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -73,15 +71,13 @@ public class DatabaseSelectorGui extends JFrame {
                         break;
                     }
                     case (KeyEvent.VK_ENTER): {
-                        getFrameFocus();
+                        selectButton.doClick();
                         break;
                     }
                     case (KeyEvent.VK_ESCAPE): {
                         cancleButton.doClick();
                         break;
                     }
-
-
                 }
             }
 
@@ -114,7 +110,6 @@ public class DatabaseSelectorGui extends JFrame {
 
     void listDatabases(HashSet<String> hashSet, JComboBox<String> comboBox) {
         try {
-            Statement statement = connection.createStatement();
             DatabaseMetaData metaData = connection.getMetaData();
             ResultSet resultSet = metaData.getCatalogs();
 
@@ -122,7 +117,7 @@ public class DatabaseSelectorGui extends JFrame {
                 hashSet.add(resultSet.getString(1));
             }
 
-            for (String s: hashSet) {
+            for (String s : hashSet) {
                 comboBox.addItem(s);
             }
 

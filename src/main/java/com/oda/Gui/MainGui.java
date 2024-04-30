@@ -71,6 +71,8 @@ public class MainGui extends JFrame {
         Panels.setComponentWithColor(deleteButton, cp, Color.WHITE, 585, 500, 150, 30);
         Panels.setComponentWithColor(logoutButton, cp, Color.WHITE, 630, 15, 130, 20);
         Panels.setComponentWithColor(switchUserButton, cp, Color.WHITE, 630, 40, 130, 20);
+        repaint();
+        revalidate();
 
 
         // Adding ActionListeners to JComponents

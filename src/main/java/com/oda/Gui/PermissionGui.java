@@ -1,9 +1,12 @@
 package com.oda.Gui;
 
+import com.oda.Main;
+
 import javax.swing.*;
 import java.awt.*;
 
 import static com.oda.Main.imageIcon;
+import static com.oda.Main.font;
 
 public class PermissionGui extends JFrame {
     public PermissionGui(int width, int height, JFrame frame) {
@@ -23,6 +26,9 @@ public class PermissionGui extends JFrame {
 
 
         // Declaring the JComponents
+        final JLabel label = new JLabel("Grant permission");
 
+        // Setting up JComponents
+        Panels.setLabel(label, cp, font, 20, 20);
     }
 }

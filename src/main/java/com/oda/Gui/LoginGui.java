@@ -213,7 +213,8 @@ public class LoginGui extends JFrame {
                 } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     if ((!usernameField.getText().isEmpty() && !usernameField.getText().equals("Username")) && (!passwordField.getText().isEmpty() && !passwordField.getText().equals("Password")))
                         loginButton.doClick();
-                }
+                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    cancleButton.doClick();
             }
 
             @Override
