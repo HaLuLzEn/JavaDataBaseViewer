@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import static com.oda.Gui.MainGui.values;
 import static com.oda.Main.*;
-import static com.oda.Main.font;
 
 public class ModifyPanel extends JPanel {
     public ModifyPanel(int id, String table, ArrayList<String> columnArr, JFrame frame, Container cp) {
@@ -128,7 +127,7 @@ public class ModifyPanel extends JPanel {
                             else if (!textFields[i].getText().isEmpty())
                                 statement.execute(String.format("UPDATE `%s` SET `%s` = '%s' WHERE id = %d;", table, columnArr.get(i), textFields[i].getText(), id));
                         }
-                        
+
                         JOptionPane.showMessageDialog(null, String.format("Modified dataset in %s", table), "Dataset added", JOptionPane.INFORMATION_MESSAGE);
                         returnToGui(frame, cp);
                         tableGui.dispose();
@@ -136,6 +135,12 @@ public class ModifyPanel extends JPanel {
                         switch (ex.getSQLState()) {
                             case ("23000"): {
                                 JOptionPane.showMessageDialog(null, "Could not find given columns", "Error", JOptionPane.ERROR_MESSAGE);
+                                break;
+                            }
+                            case ("42000"): {
+                                JOptionPane.showMessageDialog(null, "You do not have the privilege to modify datasets in this table", "Error", JOptionPane.ERROR_MESSAGE);
+                                tableGui.dispose();
+                                frame.setContentPane(cp);
                                 break;
                             }
                             default: {

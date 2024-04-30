@@ -48,6 +48,7 @@ public class MainGui extends JFrame {
         final JButton switchUserButton = new JButton("Switch user");
         final JScrollPane tablePane = new JScrollPane(tableList);
         final JScrollPane columnPane = new JScrollPane(columnList);
+        final HashSet<String> admins = new HashSet<>();
 
 
         if (username.equals("root")) {
@@ -243,15 +244,27 @@ public class MainGui extends JFrame {
             }
         });
 
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(String.format("USE %s", database));
+            statement.executeQuery("SELECT * FROM `admins`;");
+            ResultSet resultSet = statement.getResultSet();
 
-        // ROOT ONLY
-        if (username.equals("root")) {
-            JButton permsButton = new JButton("<html><font color='red'>Admin Tools</font></html>");
-            Panels.setComponentWithColor(permsButton, cp, Color.WHITE, 525, 20, 100, 30);
-            permsButton.addActionListener(e -> {
-                AdminToolsGui a = new AdminToolsGui(640, 480, this);
+            while (resultSet.next()) {
+                admins.add(resultSet.getString("username"));
+            }
 
-            });
+            for (String admin : admins) {
+                if (admin.equals(username)) {
+                    JButton permsButton = new JButton("<html><font color='red'>Admin Tools</font></html>");
+                    Panels.setComponentWithColor(permsButton, cp, Color.WHITE, 525, 20, 100, 30);
+                    permsButton.addActionListener(e -> {
+                        AdminToolsGui a = new AdminToolsGui(640, 480, this);
+                    });
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
 
 

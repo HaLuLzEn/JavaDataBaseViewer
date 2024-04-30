@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 
-import static com.oda.Gui.LoginGui.username;
 import static com.oda.Main.*;
 
 public class AdminToolsGui extends JFrame {
@@ -69,7 +68,7 @@ public class AdminToolsGui extends JFrame {
             }
         });
         grantButton.addActionListener(e -> {
-            new PermissionGui(640, 480, this);
+            new GrantPermissionGui(640, 480, this);
         });
 
     }

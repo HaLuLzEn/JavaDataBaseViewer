@@ -6,7 +6,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import static com.oda.Main.*;
 
@@ -14,7 +15,7 @@ import static com.oda.Main.*;
 public class LoginGui extends JFrame {
     public static String username = "username not found";
 
-    public LoginGui(int width, int height){
+    public LoginGui(int width, int height) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setTitle("DB login");
@@ -52,14 +53,14 @@ public class LoginGui extends JFrame {
         // Adding Listeners to JComponents
         cancleButton.addActionListener(e -> {
             dispose();
-            new ServerSelectorGui(260, 300 ,true);
-            System.out.println("Connected to the database!");
+            new ServerSelectorGui(260, 300, true);
         });
 
         this.requestFocus();
         loginButton.addActionListener(e -> {
             try {
                 connection = DriverManager.getConnection(url, usernameField.getText(), passwordField.getText());
+                System.out.println("Connected to the database!");
                 Panels.setLabel(statusLabel, cp, sFont, "Login successful", 20, 40);
                 statusLabel.setForeground(Color.GREEN);
                 repaint();

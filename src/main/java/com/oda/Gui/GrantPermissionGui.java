@@ -1,15 +1,13 @@
 package com.oda.Gui;
 
-import com.oda.Main;
-
 import javax.swing.*;
 import java.awt.*;
 
-import static com.oda.Main.imageIcon;
 import static com.oda.Main.font;
+import static com.oda.Main.imageIcon;
 
-public class PermissionGui extends JFrame {
-    public PermissionGui(int width, int height, JFrame frame) {
+public class GrantPermissionGui extends JFrame {
+    public GrantPermissionGui(int width, int height, JFrame frame) {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         setTitle("SQL Permissions");
@@ -22,7 +20,6 @@ public class PermissionGui extends JFrame {
         setVisible(true);
         Container cp = getContentPane();
         cp.setLayout(null);
-
 
 
         // Declaring the JComponents

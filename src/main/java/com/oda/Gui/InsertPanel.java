@@ -68,18 +68,27 @@ public class InsertPanel extends JPanel {
             try {
                 StringBuilder stringBuilder = new StringBuilder();
                 Statement statement = connection.createStatement();
+                for (int i = 1; i < textFields.length; i++) {
+                    if (textFields[i].getText().equals("")) {
+                        JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
                 stringBuilder.append("'" + textFields[1].getText() + "'");
                 for (int i = 2; i < textFields.length; i++) {
                     if (isNumeric(textFields[i].getText()))
-                        stringBuilder.append(", " + textFields[i].getText());
+                        stringBuilder.append(", ").append(textFields[i].getText());
                     else
-                        stringBuilder.append(", " + "'" + textFields[i].getText() + "'");
+                        stringBuilder.append(", " + "'").append(textFields[i].getText()).append("'");
                 }
                 values = stringBuilder.toString();
+                System.out.printf("INSERT INTO `%s`(%s) VALUES (%s);%n", table, columns, values);
                 statement.execute(String.format("INSERT INTO `%s`(%s) VALUES (%s);", table, columns, values));
                 JOptionPane.showMessageDialog(null, String.format("Inserted dataset to %s", table), "Dataset added", JOptionPane.INFORMATION_MESSAGE);
                 showResult(frame, cp, table);
             } catch (SQLException ex) {
+                System.out.printf("Error code: %s%n", ex.getSQLState());
+                ex.printStackTrace();
                 switch (ex.getSQLState()) {
                     case ("42000"): {
                         JOptionPane.showMessageDialog(null, "You do not have the privilege to create datasets on the table " + table, "Error", JOptionPane.ERROR_MESSAGE);

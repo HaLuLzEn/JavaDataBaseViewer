@@ -7,7 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Main {
     public static Font font = new Font("Arial", Font.PLAIN, 16);
@@ -15,8 +16,8 @@ public class Main {
     public static Font sFont = new Font("Arial", Font.PLAIN, 12);
     public static Connection connection = null;
     public static String database = "";
-    public static String port = "";
-    public static String address = "";
+    public static String port = "Port";
+    public static String address = "IP";
     public static String url = String.format("jdbc:mysql://%s:%s/%s", address, port, database);
     public static Image imageIcon;
 

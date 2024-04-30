@@ -1,15 +1,13 @@
 package com.oda.Gui;
 
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 import java.awt.*;
-import java.awt.event.*;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import static com.oda.Main.*;
 
@@ -127,6 +125,7 @@ public class ServerSelectorGui extends JFrame {
                         portField.requestFocus();
                         break;
                 }
+
             }
 
             @Override
