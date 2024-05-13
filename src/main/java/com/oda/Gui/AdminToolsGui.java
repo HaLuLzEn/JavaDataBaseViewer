@@ -1,5 +1,7 @@
 package com.oda.Gui;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.ResultSet;
@@ -32,22 +34,25 @@ public class AdminToolsGui extends JFrame {
         final JLabel permsLabel = new JLabel("Granted Permissions");
         final JList<String> users = new JList<>();
         final JList<String> perms = new JList<>();
+        final JScrollPane usersPane = new JScrollPane(users);
+        final JScrollPane permsPane = new JScrollPane(perms);
         final HashSet<String> usersArr = new HashSet<>();
         final HashSet<String> permsArr = new HashSet<>();
         final JButton tableViewButton = new JButton("Table view");
         final JButton grantButton = new JButton("Grant permission");
-        final JButton revokePermission = new JButton("Revoke permission");
+        final JButton revokeButton = new JButton("Revoke permission");
+
 
 
         // Setting up the JComponents
         Panels.setLabel(label, cp, bFont, 20, 20);
         Panels.setLabel(usersLabel, cp, font, 20, 50);
         Panels.setLabel(permsLabel, cp, font, 355, 50);
-        Panels.setComponentDefaultBackground(users, cp, 20, 80, 250, 300);
-        Panels.setComponentDefaultBackground(perms, cp, 355, 80, 250, 300);
+        Panels.setComponentDefaultBackground(usersPane, cp, 20, 80, 250, 300);
+        Panels.setComponentDefaultBackground(permsPane, cp, 355, 80, 250, 300);
         Panels.setComponentWithColor(tableViewButton, cp, Color.WHITE, 450, 20, 150, 30);
         Panels.setComponentWithColor(grantButton, cp, Color.WHITE, 20, 400, 150, 30);
-        Panels.setComponentWithColor(revokePermission, cp, Color.WHITE, 200, 400, 150, 30);
+        Panels.setComponentWithColor(revokeButton, cp, Color.WHITE, 200, 400, 150, 30);
         addUsers(usersArr, users);
         repaint();
         revalidate();
@@ -67,17 +72,16 @@ public class AdminToolsGui extends JFrame {
                 System.err.printf("Error code: %s", ex.getSQLState());
             }
         });
-        grantButton.addActionListener(e -> {
-            new GrantPermissionGui(640, 480, this);
-        });
+        grantButton.addActionListener(e -> new GrantPermissionGui(260, 300, this, users));
+        revokeButton.addActionListener(e -> new RevokePermissionGui(260, 300, this, users));
 
     }
 
-    void addUsers(HashSet<String> arr, JList<String> jList) {
+    void addUsers(@NotNull HashSet<String> arr, JList<String> jList) {
         try {
             arr.clear();
             Statement statement = connection.createStatement();
-            statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE Account_locked = 'N';");
+            statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE Account_locked = 'N' AND user not like 'root';");
             ResultSet resultSet = statement.getResultSet();
 
             while (resultSet.next()) {
@@ -87,6 +91,7 @@ public class AdminToolsGui extends JFrame {
             jList.setListData(arr.toArray(new String[0]));
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "There was an Error, finding the users", "Error", JOptionPane.ERROR_MESSAGE);
         }
 

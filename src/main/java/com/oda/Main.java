@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import static com.oda.Gui.LoginGui.username;
 
 public class Main {
     public static Font font = new Font("Arial", Font.PLAIN, 16);
@@ -20,6 +23,7 @@ public class Main {
     public static String address = "IP";
     public static String url = String.format("jdbc:mysql://%s:%s/%s", address, port, database);
     public static Image imageIcon;
+    public static boolean isAdmin = false;
 
     public static void main(String[] args) {
         try {
@@ -55,6 +59,17 @@ public class Main {
             }
         }
         return true;
+    }
+
+    public static boolean checkAdmin(String user) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeQuery("SELECT user from mysql.user;");
+            return true;
+        } catch (SQLException ex) {
+            System.out.println(ex.getSQLState());
+            return false;
+        }
     }
 }
 

@@ -49,19 +49,17 @@ public class ServerSelectorGui extends JFrame {
 
 
         // Adding Listeners to the JComponents
-        selectButton.addActionListener(e -> {
-            SwingUtilities.invokeLater(() -> {
-                address = serverField.getText();
-                port = portField.getText();
-                url = String.format("jdbc:mysql://%s:%s", address, port);
-                dispose();
-                new LoginGui(260, 300);
+        selectButton.addActionListener(e -> SwingUtilities.invokeLater(() -> {
+            if (serverField.getText().equals("127.0.0.1"))
+                serverField.setText("localhost");
+            address = serverField.getText();
+            port = portField.getText();
+            url = String.format("jdbc:mysql://%s:%s", address, port);
+            dispose();
+            new LoginGui(260, 300);
 
-            });
-        });
-        cancleButton.addActionListener(e -> {
-            System.exit(0);
-        });
+        }));
+        cancleButton.addActionListener(e -> System.exit(0));
         serverField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {

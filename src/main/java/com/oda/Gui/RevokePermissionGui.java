@@ -7,8 +7,8 @@ import java.sql.Statement;
 
 import static com.oda.Main.*;
 
-public class GrantPermissionGui extends JFrame {
-    public GrantPermissionGui(int width, int height, JFrame frame, JList<String> users) {
+public class RevokePermissionGui extends JFrame {
+    public RevokePermissionGui(int width, int height, JFrame frame, JList<String> users) {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         setTitle("SQL Permissions");
@@ -22,15 +22,14 @@ public class GrantPermissionGui extends JFrame {
         Container cp = getContentPane();
         cp.setLayout(null);
 
-        String grantUsername = users.getSelectedValue();
+        String revokeUsername = users.getSelectedValue();
 
         // Declaring the JComponents
-        final JLabel label = new JLabel("Grant permission");
-        final JLabel label2 = new JLabel(String.format("<html>for the user <b><i>%s</i></b></html>", grantUsername));
+        final JLabel label = new JLabel("Revoke permission");
+        final JLabel label2 = new JLabel(String.format("<html>from the user <b><i>%s</i></b></html>", revokeUsername));
         final JComboBox<String> comboBox = new JComboBox<>();
-        final JButton grantButton = new JButton("Grant");
+        final JButton grantButton = new JButton("Revoke");
         final JButton cancleButton = new JButton("Cancle");
-        final JCheckBox adminCheckBox = new JCheckBox("Grant Admin privilege");
 
         // Setting up JComponents
         Panels.setLabel(label, cp, font, 20, 20);
@@ -52,21 +51,17 @@ public class GrantPermissionGui extends JFrame {
         grantButton.addActionListener(e -> {
             try {
                 Statement statement = connection.createStatement();
-                statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, grantUsername, address));
+                statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, revokeUsername, address));
                 if (comboBox.getSelectedIndex() != 6)
-                    statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'Y' WHERE user = '%s';", comboBox.getSelectedItem(), grantUsername));
+                    statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'N' WHERE user = '%s';", comboBox.getSelectedItem(), revokeUsername));
                 else
-                    statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'Y', Insert_priv = 'Y', Update_priv = 'Y', Delete_priv = 'Y', Create_priv = 'Y', Drop_priv = 'Y' WHERE user = '%s';", comboBox.getSelectedItem(), grantUsername));
-                JOptionPane.showMessageDialog(null, String.format("Granted permission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
-                if (adminCheckBox.isSelected()) {
-                    statement.execute(String.format("GRANT ALL PRIVILEGES ON mysql.* TO %s", grantUsername));
-                    statement.execute(String.format("INSERT INTO admins(user) "));
-                }
+                    statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'N', Insert_priv = 'N', Update_priv = 'N', Delete_priv = 'N', Create_priv = 'N', Drop_priv = 'N' WHERE user = '%s';", revokeUsername));
+                JOptionPane.showMessageDialog(null, String.format("Revoked permission %s to the user %s", comboBox.getSelectedItem(), revokeUsername), "Revoked permission", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } catch (SQLException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, String.format("Could not grant the permsission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, String.format("Could not revoke the permsission %s from the user %s", comboBox.getSelectedItem(), revokeUsername), "Error", JOptionPane.ERROR_MESSAGE);
             }
+
         });
 
 
