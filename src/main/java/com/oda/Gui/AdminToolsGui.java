@@ -1,7 +1,5 @@
 package com.oda.Gui;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.ResultSet;
@@ -43,7 +41,6 @@ public class AdminToolsGui extends JFrame {
         final JButton revokeButton = new JButton("Revoke permission");
 
 
-
         // Setting up the JComponents
         Panels.setLabel(label, cp, bFont, 20, 20);
         Panels.setLabel(usersLabel, cp, font, 20, 50);
@@ -77,11 +74,11 @@ public class AdminToolsGui extends JFrame {
 
     }
 
-    void addUsers(@NotNull HashSet<String> arr, JList<String> jList) {
+    void addUsers(HashSet<String> arr, JList<String> jList) {
         try {
             arr.clear();
             Statement statement = connection.createStatement();
-            statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE Account_locked = 'N' AND user not like 'root';");
+            statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE user not like 'root';");
             ResultSet resultSet = statement.getResultSet();
 
             while (resultSet.next()) {
@@ -101,21 +98,16 @@ public class AdminToolsGui extends JFrame {
         try {
             arr.removeAll(arr);
             Statement statement = connection.createStatement();
-            statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE Account_locked = 'N';");
+            statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE user not like 'root' OR 'mysql';");
             ResultSet resultSet = statement.getResultSet();
             ResultSetMetaData metaData = resultSet.getMetaData();
-
             while (resultSet.next()) {
                 for (int i = 1; i <= metaData.getColumnCount(); i++) {
                     if (resultSet.getString(i).equals("Y"))
                         arr.add(metaData.getColumnName(i));
-                    else if (resultSet.getString(i).equals("N")) {
-
-                    }
                 }
 
             }
-
             jList.setListData(arr.toArray(new String[0]));
         } catch (SQLException ex) {
             ex.printStackTrace();

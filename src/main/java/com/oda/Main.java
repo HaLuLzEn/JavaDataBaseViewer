@@ -61,10 +61,10 @@ public class Main {
         return true;
     }
 
-    public static boolean checkAdmin(String user) {
+    public static boolean checkAdmin() {
         try {
             Statement statement = connection.createStatement();
-            statement.executeQuery("SELECT user from mysql.user;");
+            statement.executeQuery("SELECT * FROM mysql.user;");
             return true;
         } catch (SQLException ex) {
             System.out.println(ex.getSQLState());

@@ -140,6 +140,8 @@ create table order_article_rel
     constraint pk_order_article_rel_id primary key (order_id, article_id)
 );
 
+
+
 #Anlegen der Datensätze
 
 insert into location(`name`)
@@ -188,3 +190,11 @@ select *
 from department;
 select *
 from team;
+
+select * from mysql.user;
+
+CREATE USER 'haliladmin'@localhost IDENTIFIED BY 'test';
+
+update mysql.user set account_locked = 'Y' where user = 'haliladmin';
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;

@@ -45,6 +45,7 @@ public class GrantPermissionGui extends JFrame {
         comboBox.addItem("All privileges");
         Panels.setComponentWithColor(grantButton, cp, Color.WHITE, 15, 200, 100, 30);
         Panels.setComponentWithColor(cancleButton, cp, Color.WHITE, 130, 200, 100, 30);
+        Panels.setComponentDefaultBackground(adminCheckBox, cp, 15, 150, 200, 20);
 
 
         cancleButton.addActionListener(e -> dispose());
@@ -53,19 +54,33 @@ public class GrantPermissionGui extends JFrame {
             try {
                 Statement statement = connection.createStatement();
                 statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, grantUsername, address));
+                /*
                 if (comboBox.getSelectedIndex() != 6)
                     statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'Y' WHERE user = '%s';", comboBox.getSelectedItem(), grantUsername));
                 else
                     statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'Y', Insert_priv = 'Y', Update_priv = 'Y', Delete_priv = 'Y', Create_priv = 'Y', Drop_priv = 'Y' WHERE user = '%s';", comboBox.getSelectedItem(), grantUsername));
-                JOptionPane.showMessageDialog(null, String.format("Granted permission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
+                */
                 if (adminCheckBox.isSelected()) {
-                    statement.execute(String.format("GRANT ALL PRIVILEGES ON mysql.* TO %s", grantUsername));
-                    statement.execute(String.format("INSERT INTO admins(user) "));
+                    statement.execute(String.format("GRANT ALL PRIVILEGES ON *.* TO '%s'@'%s' WITH GRANT OPTION;", grantUsername, address));
+                    //statement.execute(String.format("INSERT INTO admins(user) "));
                 }
+                JOptionPane.showMessageDialog(null, String.format("Granted permission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, String.format("Could not grant the permsission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Error", JOptionPane.ERROR_MESSAGE);
+                switch (ex.getSQLState()) {
+                    case "42000": {
+                        JOptionPane.showMessageDialog(null, "You do not have the permission to grant permissions", "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                    case "42S22": {
+                        JOptionPane.showMessageDialog(null, "The user does not exist", "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                    default:
+                        JOptionPane.showMessageDialog(null, String.format("Could not grant the permsission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                }
             }
         });
 

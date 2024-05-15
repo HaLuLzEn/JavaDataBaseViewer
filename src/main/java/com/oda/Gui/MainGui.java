@@ -52,10 +52,10 @@ public class MainGui extends JFrame {
         final JScrollPane columnPane = new JScrollPane(columnList);
         final HashSet<String> admins = new HashSet<>();
 
-        isAdmin = Main.checkAdmin(username);
+        isAdmin = Main.checkAdmin();
 
 
-        if (username.equals("root")) {
+        if (username.equals("root") || isAdmin) {
             String hexCode = "#FF0000";
             loggedInLabel = new JLabel(String.format("<html>Logged in as <b><i><font color='%s'>%s</font></i></b>, using Database %s</html>", hexCode, username, database));
             JOptionPane.showMessageDialog(null, String.format("<html>You are logged in as <b><font color='%s'>%s</font><b>. Be responsible with your privileges</html>", hexCode, username), "Warning", JOptionPane.WARNING_MESSAGE);
