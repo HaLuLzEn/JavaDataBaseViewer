@@ -52,13 +52,18 @@ public class RevokePermissionGui extends JFrame {
             try {
                 Statement statement = connection.createStatement();
                 statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, revokeUsername, address));
+                /*
                 if (comboBox.getSelectedIndex() != 6)
                     statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'N' WHERE user = '%s';", comboBox.getSelectedItem(), revokeUsername));
                 else
                     statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'N', Insert_priv = 'N', Update_priv = 'N', Delete_priv = 'N', Create_priv = 'N', Drop_priv = 'N' WHERE user = '%s';", revokeUsername));
+                */
                 JOptionPane.showMessageDialog(null, String.format("Revoked permission %s to the user %s", comboBox.getSelectedItem(), revokeUsername), "Revoked permission", JOptionPane.INFORMATION_MESSAGE);
+                 
                 dispose();
             } catch (SQLException ex) {
+                System.out.printf("Error Code: %s%n", ex.getSQLState());
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, String.format("Could not revoke the permsission %s from the user %s", comboBox.getSelectedItem(), revokeUsername), "Error", JOptionPane.ERROR_MESSAGE);
             }
 

@@ -61,10 +61,11 @@ public class AdminToolsGui extends JFrame {
         tableViewButton.addActionListener(e -> {
             try {
                 Statement statement = connection.createStatement();
-                statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE Account_locked = 'N';");
+                statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE user not like 'sys' OR 'mysql' or 'mariadb' OR 'root';");
                 ResultSet resultSet = statement.getResultSet();
                 TableGui tableGui = new TableGui(640, 480, resultSet, this);
             } catch (SQLException ex) {
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Could not create a Table", "Error", JOptionPane.ERROR_MESSAGE);
                 System.err.printf("Error code: %s", ex.getSQLState());
             }
@@ -78,7 +79,7 @@ public class AdminToolsGui extends JFrame {
         try {
             arr.clear();
             Statement statement = connection.createStatement();
-            statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE user not like 'root';");
+            statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE user not like 'sys' OR 'mysql' or 'mariadb' OR 'root';");
             ResultSet resultSet = statement.getResultSet();
 
             while (resultSet.next()) {
