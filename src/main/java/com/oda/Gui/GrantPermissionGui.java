@@ -30,7 +30,7 @@ public class GrantPermissionGui extends JFrame {
         final JComboBox<String> comboBox = new JComboBox<>();
         final JButton grantButton = new JButton("Grant");
         final JButton cancleButton = new JButton("Cancle");
-        final JCheckBox adminCheckBox = new JCheckBox("Grant Admin privilege");
+        final JCheckBox adminCheckBox = new JCheckBox("<html><font color='red'>Grant Admin privilege</font></html>");
 
         // Setting up JComponents
         Panels.setLabel(label, cp, font, 20, 20);
@@ -48,23 +48,29 @@ public class GrantPermissionGui extends JFrame {
         Panels.setComponentDefaultBackground(adminCheckBox, cp, 15, 150, 200, 20);
 
 
+        adminCheckBox.addActionListener(e -> {
+            comboBox.setEnabled(!adminCheckBox.isSelected());
+        });
+
         cancleButton.addActionListener(e -> dispose());
 
         grantButton.addActionListener(e -> {
             try {
                 Statement statement = connection.createStatement();
-                statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, grantUsername, address));
+                if (adminCheckBox.isSelected()) {
+                    JOptionPane.showMessageDialog(null, "You are about to grant admin privileges", "Warning", JOptionPane.WARNING_MESSAGE);
+                    statement.execute(String.format("GRANT ALL PRIVILEGES ON *.* TO '%s'@'%s' WITH GRANT OPTION;", grantUsername, address));
+                    JOptionPane.showMessageDialog(null, String.format("Granted admin privileges to the user %s", grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, grantUsername, address));
+                    JOptionPane.showMessageDialog(null, String.format("Granted permission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
+                }
                 /*
                 if (comboBox.getSelectedIndex() != 6)
                     statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'Y' WHERE user = '%s';", comboBox.getSelectedItem(), grantUsername));
                 else
                     statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'Y', Insert_priv = 'Y', Update_priv = 'Y', Delete_priv = 'Y', Create_priv = 'Y', Drop_priv = 'Y' WHERE user = '%s';", grantUsername));
-                */
-                if (adminCheckBox.isSelected()) {
-                    statement.execute(String.format("GRANT ALL PRIVILEGES ON *.* TO '%s'@'%s' WITH GRANT OPTION;", grantUsername, address));
-                    //statement.execute(String.format("INSERT INTO admins(user) "));
-                }
-                JOptionPane.showMessageDialog(null, String.format("Granted permission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
+                 */
                 dispose();
             } catch (SQLException ex) {
                 ex.printStackTrace();
