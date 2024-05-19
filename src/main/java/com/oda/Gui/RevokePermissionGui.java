@@ -30,6 +30,7 @@ public class RevokePermissionGui extends JFrame {
         final JComboBox<String> comboBox = new JComboBox<>();
         final JButton grantButton = new JButton("Revoke");
         final JButton cancleButton = new JButton("Cancle");
+        final JCheckBox adminCheckBox = new JCheckBox("<html><font color='red'>Revoke Admin privilege</font></html>");
 
         // Setting up JComponents
         Panels.setLabel(label, cp, font, 20, 20);
@@ -44,6 +45,7 @@ public class RevokePermissionGui extends JFrame {
         comboBox.addItem("All privileges");
         Panels.setComponentWithColor(grantButton, cp, Color.WHITE, 15, 200, 100, 30);
         Panels.setComponentWithColor(cancleButton, cp, Color.WHITE, 130, 200, 100, 30);
+        Panels.setComponentDefaultBackground(adminCheckBox, cp, 15, 150, 200, 20);
 
 
         cancleButton.addActionListener(e -> dispose());
@@ -59,7 +61,8 @@ public class RevokePermissionGui extends JFrame {
                     statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'N', Insert_priv = 'N', Update_priv = 'N', Delete_priv = 'N', Create_priv = 'N', Drop_priv = 'N' WHERE user = '%s';", revokeUsername));
                 */
                 JOptionPane.showMessageDialog(null, String.format("Revoked permission %s to the user %s", comboBox.getSelectedItem(), revokeUsername), "Revoked permission", JOptionPane.INFORMATION_MESSAGE);
-                 
+                 if (comboBox.getSelectedIndex() == 6)
+                    statement.execute(String.format("REVOKE ALL PRIVILEGES ON *.* FROM '%s'@'%s';", revokeUsername, address));
                 dispose();
             } catch (SQLException ex) {
                 System.out.printf("Error Code: %s%n", ex.getSQLState());
