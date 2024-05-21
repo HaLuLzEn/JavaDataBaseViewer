@@ -39,6 +39,8 @@ public class AdminToolsGui extends JFrame {
         final JButton tableViewButton = new JButton("Table view");
         final JButton grantButton = new JButton("Grant permission");
         final JButton revokeButton = new JButton("Revoke permission");
+        final JButton createUserButton = new JButton("Create user");
+        final JButton removeUserButton = new JButton("Remove user");
 
 
         // Setting up the JComponents
@@ -48,8 +50,10 @@ public class AdminToolsGui extends JFrame {
         Panels.setComponentDefaultBackground(usersPane, cp, 20, 80, 250, 300);
         Panels.setComponentDefaultBackground(permsPane, cp, 355, 80, 250, 300);
         Panels.setComponentWithColor(tableViewButton, cp, Color.WHITE, 450, 20, 150, 30);
-        Panels.setComponentWithColor(grantButton, cp, Color.WHITE, 20, 400, 150, 30);
-        Panels.setComponentWithColor(revokeButton, cp, Color.WHITE, 200, 400, 150, 30);
+        Panels.setComponentWithColor(grantButton, cp, Color.WHITE, 20, 400, 125, 30);
+        Panels.setComponentWithColor(revokeButton, cp, Color.WHITE, 145, 400, 125, 30);
+        Panels.setComponentWithColor(createUserButton, cp, Color.WHITE, 355, 400, 125, 30);
+        Panels.setComponentWithColor(removeUserButton, cp, Color.WHITE, 480, 400, 125, 30);
         addUsers(usersArr, users);
         repaint();
         revalidate();
@@ -72,7 +76,27 @@ public class AdminToolsGui extends JFrame {
         });
         grantButton.addActionListener(e -> new GrantPermissionGui(260, 300, this, users));
         revokeButton.addActionListener(e -> new RevokePermissionGui(260, 300, this, users));
-
+        createUserButton.addActionListener(e -> {
+            setContentPane(new CreateUserPanel(this, cp));
+            repaint();
+            revalidate();
+        });
+        removeUserButton.addActionListener(e -> {
+            try {
+                String user[] = users.getSelectedValue().split("@");
+                String username = user[0];
+                String host = user[1];
+                Statement statement = connection.createStatement();
+                if (JOptionPane.showConfirmDialog(null, String.format("Are you sure, you want to delete the user %s?", username), "Warning", JOptionPane.WARNING_MESSAGE) == 1)
+                    statement.execute(String.format("DROP USER '%s'@'%s';", username, host));
+                JOptionPane.showMessageDialog(null, String.format("Successfully deleted the user %s", username), "Deleted user", JOptionPane.INFORMATION_MESSAGE);
+                addUsers(usersArr, perms);
+            } catch (SQLException ex) {
+                System.out.println(ex.getSQLState());
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Could not delete the user", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     void addUsers(HashSet<String> arr, JList<String> jList) {

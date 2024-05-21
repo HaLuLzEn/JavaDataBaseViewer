@@ -78,9 +78,9 @@ public class RevokePermissionGui extends JFrame {
                 }
 
                 if (comboBox.getSelectedIndex() != 6 || !adminCheckBox.isSelected())
-                    statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'N' WHERE user = '%s';", comboBox.getSelectedItem(), revokeUsername));
+                    statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'N' WHERE host = '%s' AND user = '%s';", comboBox.getSelectedItem(), revokeAddress, revokeUsername));
                 else
-                    statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'N', Insert_priv = 'N', Update_priv = 'N', Delete_priv = 'N', Create_priv = 'N', Drop_priv = 'N' WHERE user = '%s';", revokeUsername));
+                    statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'N', Insert_priv = 'N', Update_priv = 'N', Delete_priv = 'N', Create_priv = 'N', Drop_priv = 'N' WHERE host = '%s' AND user = '%s';", revokeAddress, revokeUsername));
 
                 dispose();
             } catch (SQLException ex) {

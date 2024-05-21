@@ -80,9 +80,9 @@ public class GrantPermissionGui extends JFrame {
                 }
 
                 if (comboBox.getSelectedIndex() != 6 || !adminCheckBox.isSelected())
-                    statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'Y' WHERE user = '%s';", comboBox.getSelectedItem(), grantUsername));
+                    statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'Y' WHERE host = '%s' AND user = '%s';", comboBox.getSelectedItem(), grantAddress, grantUsername));
                 else
-                    statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'Y', Insert_priv = 'Y', Update_priv = 'Y', Delete_priv = 'Y', Create_priv = 'Y', Drop_priv = 'Y' WHERE user = '%s';", grantUsername));
+                    statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'Y', Insert_priv = 'Y', Update_priv = 'Y', Delete_priv = 'Y', Create_priv = 'Y', Drop_priv = 'Y' WHERE host = '%s' AND user = '%s';", grantAddress, grantUsername));
 
                 dispose();
             } catch (SQLException ex) {
