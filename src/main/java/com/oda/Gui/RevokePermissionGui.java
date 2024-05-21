@@ -54,8 +54,7 @@ public class RevokePermissionGui extends JFrame {
 
 
         adminCheckBox.addActionListener(e -> {
-            comboBox.setSelectedIndex(6
-            );
+            comboBox.setSelectedIndex(6);
             comboBox.setEnabled(!adminCheckBox.isSelected());
         });
 
@@ -67,7 +66,7 @@ public class RevokePermissionGui extends JFrame {
                 if (adminCheckBox.isSelected()) {
                     if (JOptionPane.showConfirmDialog(null, "Are you sure you want to revoke all privileges from the user?", "Revoke all privileges", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 1)
                         statement.execute(String.format("REVOKE ALL PRIVILEGES ON *.* FROM '%s'@'%s';", revokeUsername, revokeAddress));
-                        //statement.execute("FLUSH PRIVILEGES;");
+                        statement.execute("FLUSH PRIVILEGES;");
                         JOptionPane.showMessageDialog(null, String.format("Revoked Admin privileges from the user %s", revokeUsername), "Revoked permission", JOptionPane.INFORMATION_MESSAGE);
                         ImageIcon icon = new ImageIcon("master.jpg");
                         Image image = icon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);

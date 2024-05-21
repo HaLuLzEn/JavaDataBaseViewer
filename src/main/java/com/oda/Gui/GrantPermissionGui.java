@@ -33,6 +33,7 @@ public class GrantPermissionGui extends JFrame {
         final JButton grantButton = new JButton("Grant");
         final JButton cancleButton = new JButton("Cancle");
         final JCheckBox adminCheckBox = new JCheckBox("<html><font color='red'>Grant Admin privilege</font></html>");
+        final JCheckBox grantCheckBox = new JCheckBox("<html><font color='red'>Grant option</font></html>");
 
         // Setting up JComponents
         Panels.setLabel(label, cp, font, 20, 20);
@@ -48,6 +49,7 @@ public class GrantPermissionGui extends JFrame {
         Panels.setComponentWithColor(grantButton, cp, Color.WHITE, 15, 200, 100, 30);
         Panels.setComponentWithColor(cancleButton, cp, Color.WHITE, 130, 200, 100, 30);
         Panels.setComponentDefaultBackground(adminCheckBox, cp, 15, 150, 200, 20);
+        Panels.setComponentDefaultBackground(grantCheckBox, cp, 15, 175, 200, 20);
 
 
         adminCheckBox.addActionListener(e -> {
@@ -61,11 +63,19 @@ public class GrantPermissionGui extends JFrame {
             try {
                 Statement statement = connection.createStatement();
                 if (adminCheckBox.isSelected()) {
+                    String command = String.format("GRANT ALL PRIVILEGES ON *.* TO '%s'@'%s'", grantUsername, grantAddress);
                     JOptionPane.showMessageDialog(null, "You are about to grant admin privileges", "Warning", JOptionPane.WARNING_MESSAGE);
-                    statement.execute(String.format("GRANT ALL PRIVILEGES ON *.* TO '%s'@'%s' WITH GRANT OPTION;", grantUsername, grantAddress));
+                    if (grantCheckBox.isSelected())
+                        statement.execute(command + "WITH GRANT OPTION;");
+                    else
+                        statement.execute(command + ";");
                     JOptionPane.showMessageDialog(null, String.format("Granted admin privileges to the user %s", grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, grantUsername, grantAddress));
+                    String command = String.format("GRANT %S ON %s.* TO '%s'@'%s';", comboBox.getSelectedItem(), database, grantUsername, grantAddress);
+                    if (grantCheckBox.isSelected())
+                        statement.execute(command + "WITH GRANT OPTION;");
+                    else
+                        statement.execute(command + ";");
                     JOptionPane.showMessageDialog(null, String.format("Granted permission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
                 }
 
