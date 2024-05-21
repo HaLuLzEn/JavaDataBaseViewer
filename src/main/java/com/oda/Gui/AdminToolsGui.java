@@ -79,11 +79,11 @@ public class AdminToolsGui extends JFrame {
         try {
             arr.clear();
             Statement statement = connection.createStatement();
-            statement.executeQuery("SELECT user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE user not like 'sys' OR 'mysql' or 'mariadb' OR 'root';");
+            statement.executeQuery("SELECT host,user,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv FROM mysql.user WHERE user NOT LIKE '%mysql%' or '%mariadb%' OR '%root%';");
             ResultSet resultSet = statement.getResultSet();
 
             while (resultSet.next()) {
-                arr.add(resultSet.getString("user"));
+                arr.add(String.format("%s@%s", resultSet.getString(2), resultSet.getString(1)));
             }
 
             jList.setListData(arr.toArray(new String[0]));

@@ -59,6 +59,8 @@ public class LoginGui extends JFrame {
         this.requestFocus();
         loginButton.addActionListener(e -> {
             try {
+                loginButton.setEnabled(false);
+                Panels.setLabel(statusLabel, cp, sFont, "Connecting...", 20, 40);
                 connection = DriverManager.getConnection(url, usernameField.getText(), passwordField.getText());
                 System.out.println("Connected to the database!");
                 Panels.setLabel(statusLabel, cp, sFont, "Login successful", 20, 40);
@@ -77,6 +79,7 @@ public class LoginGui extends JFrame {
                     new DatabaseSelectorGui(260, 300);
                 });
             } catch (SQLException ex) {
+                loginButton.setEnabled(true);
                 System.err.printf("Error code: %s%n", ex.getSQLState());
                 switch (ex.getSQLState()) {
                     case ("28000"): {

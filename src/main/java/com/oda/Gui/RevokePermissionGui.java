@@ -24,7 +24,10 @@ public class RevokePermissionGui extends JFrame {
         Container cp = getContentPane();
         cp.setLayout(null);
 
-        String revokeUsername = users.getSelectedValue();
+
+        String revoke[] = users.getSelectedValue().split("@");
+        String revokeUsername = revoke[0];
+        String revokeAddress = revoke[1];
 
         // Declaring the JComponents
         final JLabel label = new JLabel("Revoke permission");
@@ -51,6 +54,8 @@ public class RevokePermissionGui extends JFrame {
 
 
         adminCheckBox.addActionListener(e -> {
+            comboBox.setSelectedIndex(6
+            );
             comboBox.setEnabled(!adminCheckBox.isSelected());
         });
 
@@ -61,23 +66,23 @@ public class RevokePermissionGui extends JFrame {
                 Statement statement = connection.createStatement();
                 if (adminCheckBox.isSelected()) {
                     if (JOptionPane.showConfirmDialog(null, "Are you sure you want to revoke all privileges from the user?", "Revoke all privileges", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 1)
-                        statement.execute(String.format("REVOKE ALL PRIVILEGES ON *.* FROM '%s'@'%s';", revokeUsername, address));
-                        statement.execute("FLUSH PRIVILEGES;");
+                        statement.execute(String.format("REVOKE ALL PRIVILEGES ON *.* FROM '%s'@'%s';", revokeUsername, revokeAddress));
+                        //statement.execute("FLUSH PRIVILEGES;");
                         JOptionPane.showMessageDialog(null, String.format("Revoked Admin privileges from the user %s", revokeUsername), "Revoked permission", JOptionPane.INFORMATION_MESSAGE);
                         ImageIcon icon = new ImageIcon("master.jpg");
                         Image image = icon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
                         JOptionPane.showMessageDialog(null, "WER HAT MIR MEINE MOD-RECHTE WEGGENOMMEN?!?!", "HALLO?!?!", JOptionPane.ERROR_MESSAGE, new ImageIcon(image));
                 } else {
-                    statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, revokeUsername, address));
+                    statement.execute(String.format("REVOKE %S ON %s.* FROM '%s'@'%s';%n", comboBox.getSelectedItem(), database, revokeUsername, revokeAddress));
                     statement.execute("FLUSH PRIVILEGES;");
                     JOptionPane.showMessageDialog(null, String.format("Revoked permission %s to the user %s", comboBox.getSelectedItem(), revokeUsername), "Revoked permission", JOptionPane.INFORMATION_MESSAGE);
                 }
-                /*
-                if (comboBox.getSelectedIndex() != 6)
+
+                if (comboBox.getSelectedIndex() != 6 || !adminCheckBox.isSelected())
                     statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'N' WHERE user = '%s';", comboBox.getSelectedItem(), revokeUsername));
                 else
                     statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'N', Insert_priv = 'N', Update_priv = 'N', Delete_priv = 'N', Create_priv = 'N', Drop_priv = 'N' WHERE user = '%s';", revokeUsername));
-                 */
+
                 dispose();
             } catch (SQLException ex) {
                 System.out.printf("Error Code: %s%n", ex.getSQLState());

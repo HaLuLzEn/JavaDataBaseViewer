@@ -22,7 +22,9 @@ public class GrantPermissionGui extends JFrame {
         Container cp = getContentPane();
         cp.setLayout(null);
 
-        String grantUsername = users.getSelectedValue();
+        String grant[] = users.getSelectedValue().split("@");
+        String grantUsername = grant[0];
+        String grantAddress = grant[1];
 
         // Declaring the JComponents
         final JLabel label = new JLabel("Grant permission");
@@ -49,6 +51,7 @@ public class GrantPermissionGui extends JFrame {
 
 
         adminCheckBox.addActionListener(e -> {
+            comboBox.setSelectedIndex(6);
             comboBox.setEnabled(!adminCheckBox.isSelected());
         });
 
@@ -59,18 +62,18 @@ public class GrantPermissionGui extends JFrame {
                 Statement statement = connection.createStatement();
                 if (adminCheckBox.isSelected()) {
                     JOptionPane.showMessageDialog(null, "You are about to grant admin privileges", "Warning", JOptionPane.WARNING_MESSAGE);
-                    statement.execute(String.format("GRANT ALL PRIVILEGES ON *.* TO '%s'@'%s' WITH GRANT OPTION;", grantUsername, address));
+                    statement.execute(String.format("GRANT ALL PRIVILEGES ON *.* TO '%s'@'%s' WITH GRANT OPTION;", grantUsername, grantAddress));
                     JOptionPane.showMessageDialog(null, String.format("Granted admin privileges to the user %s", grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, grantUsername, address));
+                    statement.execute(String.format("GRANT %S ON %s.* TO '%s'@'%s';%n", comboBox.getSelectedItem(), database, grantUsername, grantAddress));
                     JOptionPane.showMessageDialog(null, String.format("Granted permission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
                 }
-                /*
-                if (comboBox.getSelectedIndex() != 6)
+
+                if (comboBox.getSelectedIndex() != 6 || !adminCheckBox.isSelected())
                     statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'Y' WHERE user = '%s';", comboBox.getSelectedItem(), grantUsername));
                 else
                     statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'Y', Insert_priv = 'Y', Update_priv = 'Y', Delete_priv = 'Y', Create_priv = 'Y', Drop_priv = 'Y' WHERE user = '%s';", grantUsername));
-                 */
+
                 dispose();
             } catch (SQLException ex) {
                 ex.printStackTrace();
