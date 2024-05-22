@@ -64,8 +64,21 @@ public class CreateUserPanel extends JPanel {
                 frame.switchBack();
                 frame.setContentPane(cp);
             } catch (SQLException ex) {
+                switch (ex.getSQLState()) {
+                    case ("HY000"): {
+                        JOptionPane.showMessageDialog(null, "This user already exists", "Error" ,JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                    default: {
+                        JOptionPane.showMessageDialog(null, "Could not create the user", "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                }
                 System.out.println(ex.getSQLState());
                 ex.printStackTrace();
+                frame.setContentPane(cp);
+                frame.repaint();
+                frame.revalidate();
             }
         });
 

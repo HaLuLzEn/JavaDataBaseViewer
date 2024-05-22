@@ -79,13 +79,8 @@ public class GrantPermissionGui extends JFrame {
                         statement.execute(command + ";");
                     JOptionPane.showMessageDialog(null, String.format("Granted permission %s to the user %s", comboBox.getSelectedItem(), grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
                 }
-
-                if (comboBox.getSelectedIndex() != 6 || !adminCheckBox.isSelected())
-                    statement.execute(String.format("UPDATE mysql.user SET %s_priv = 'Y' WHERE host = '%s' AND user = '%s';", comboBox.getSelectedItem(), grantAddress, grantUsername));
-                else
-                    statement.execute(String.format("UPDATE mysql.user SET Select_priv = 'Y', Insert_priv = 'Y', Update_priv = 'Y', Delete_priv = 'Y', Create_priv = 'Y', Drop_priv = 'Y' WHERE host = '%s' AND user = '%s';", grantAddress, grantUsername));
-
                 dispose();
+
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 switch (ex.getSQLState()) {
