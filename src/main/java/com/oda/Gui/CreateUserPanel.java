@@ -11,13 +11,13 @@ import java.sql.Statement;
 import static com.oda.Main.*;
 
 public class CreateUserPanel extends JPanel {
-    public CreateUserPanel(JFrame frame, Container cp) {
+    public CreateUserPanel(AdminToolsGui frame, Container cp) {
         // Declaration of Components
         setLayout(null);
         final JLabel label = new JLabel(String.format("Create a User (Default address: %s)", address));
         final JTextField usernameField = new JTextField();
         final JTextField addressField = new JTextField();
-        final JTextField authenticationField = new JTextField();
+        final JPasswordField authenticationField = new JPasswordField();
         final JLabel usernameLabel = new JLabel("Username");
         final JLabel addressLabel = new JLabel("Address");
         final JLabel authenticationLabel = new JLabel("Authentication String");
@@ -60,6 +60,9 @@ public class CreateUserPanel extends JPanel {
                 if (addressField.getText().equals("Leave empty for default") || addressField.getText().isEmpty())
                     addressField.setText(address);
                 statement.execute(String.format("CREATE USER '%s'@'%s' IDENTIFIED BY '%s'", usernameField.getText(), addressField.getText(), authenticationField.getText()));
+                JOptionPane.showMessageDialog(null, String.format("Successfully created the user %s", usernameField.getText(), "Success", JOptionPane.INFORMATION_MESSAGE));
+                frame.switchBack();
+                frame.setContentPane(cp);
             } catch (SQLException ex) {
                 System.out.println(ex.getSQLState());
                 ex.printStackTrace();

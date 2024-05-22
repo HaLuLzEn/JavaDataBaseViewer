@@ -11,6 +11,11 @@ import java.util.HashSet;
 import static com.oda.Main.*;
 
 public class AdminToolsGui extends JFrame {
+    final JList<String> users = new JList<>();
+    final JList<String> perms = new JList<>();
+    final HashSet<String> usersArr = new HashSet<>();
+    final HashSet<String> permsArr = new HashSet<>();
+
     public AdminToolsGui(int width, int height, JFrame frame) {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -30,12 +35,8 @@ public class AdminToolsGui extends JFrame {
         final JLabel label = new JLabel("Admin Tools");
         final JLabel usersLabel = new JLabel("Users");
         final JLabel permsLabel = new JLabel("Granted Permissions");
-        final JList<String> users = new JList<>();
-        final JList<String> perms = new JList<>();
         final JScrollPane usersPane = new JScrollPane(users);
         final JScrollPane permsPane = new JScrollPane(perms);
-        final HashSet<String> usersArr = new HashSet<>();
-        final HashSet<String> permsArr = new HashSet<>();
         final JButton tableViewButton = new JButton("Table view");
         final JButton grantButton = new JButton("Grant permission");
         final JButton revokeButton = new JButton("Revoke permission");
@@ -87,10 +88,11 @@ public class AdminToolsGui extends JFrame {
                 String username = user[0];
                 String host = user[1];
                 Statement statement = connection.createStatement();
-                if (JOptionPane.showConfirmDialog(null, String.format("Are you sure, you want to delete the user %s?", username), "Warning", JOptionPane.WARNING_MESSAGE) == 1)
+                if (JOptionPane.showConfirmDialog(null, String.format("Are you sure, you want to delete the user %s?", username), "Warning", JOptionPane.WARNING_MESSAGE) == 0) {
                     statement.execute(String.format("DROP USER '%s'@'%s';", username, host));
-                JOptionPane.showMessageDialog(null, String.format("Successfully deleted the user %s", username), "Deleted user", JOptionPane.INFORMATION_MESSAGE);
-                addUsers(usersArr, perms);
+                    addUsers(usersArr, users);
+                    JOptionPane.showMessageDialog(null, String.format("Successfully deleted the user %s", username), "Deleted user", JOptionPane.INFORMATION_MESSAGE);
+                }
             } catch (SQLException ex) {
                 System.out.println(ex.getSQLState());
                 ex.printStackTrace();
@@ -138,5 +140,9 @@ public class AdminToolsGui extends JFrame {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "There was an Error, getting the granted permissions", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    protected void switchBack() {
+        addUsers(usersArr, users);
     }
 }

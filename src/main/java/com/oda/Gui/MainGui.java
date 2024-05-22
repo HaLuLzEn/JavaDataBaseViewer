@@ -52,9 +52,7 @@ public class MainGui extends JFrame {
         final JScrollPane columnPane = new JScrollPane(columnList);
 
         if (username.equals("root") || Main.checkAdmin()) {
-            String hexCode = "#FF0000";
-            loggedInLabel = new JLabel(String.format("<html>Logged in as <b><i><font color='%s'>%s</font></i></b>, using Database %s</html>", hexCode, username, database));
-            JOptionPane.showMessageDialog(null, String.format("<html>You are logged in as <b><font color='%s'>%s</font><b>. Be responsible with your privileges</html>", hexCode, username), "Warning", JOptionPane.WARNING_MESSAGE);
+            loggedInLabel = new JLabel(String.format("<html>Logged in as <b><i><font color='red'>%s</font></i></b>, using Database %s</html>", username, database));
             final JButton permsButton = new JButton("<html><font color='red'>Admin Tools</font></html>");
             Panels.setComponentWithColor(permsButton, cp, Color.WHITE, 500, 20, 125, 30);
             permsButton.addActionListener(e -> {
@@ -172,6 +170,7 @@ public class MainGui extends JFrame {
         switchUserButton.addActionListener(e -> {
             if (JOptionPane.showConfirmDialog(null, "Do want to switch accounts?", "Confirm", JOptionPane.YES_NO_OPTION) == 0) {
                 System.out.printf("User %s is switching accounts%n", username);
+
                 dispose();
                 try {
                     connection.close();
