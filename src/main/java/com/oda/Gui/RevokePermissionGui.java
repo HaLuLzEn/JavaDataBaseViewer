@@ -1,9 +1,11 @@
 package com.oda.Gui;
 
+import com.oda.Main;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -68,7 +70,7 @@ public class RevokePermissionGui extends JFrame {
                         statement.execute(String.format("REVOKE ALL PRIVILEGES ON *.* FROM '%s'@'%s';", revokeUsername, revokeAddress));
                         statement.execute("FLUSH PRIVILEGES;");
                         JOptionPane.showMessageDialog(null, String.format("Revoked Admin privileges from the user %s", revokeUsername), "Revoked permission", JOptionPane.INFORMATION_MESSAGE);
-                        ImageIcon icon = new ImageIcon("master.jpg");
+                        ImageIcon icon = new ImageIcon(ImageIO.read(Main.class.getClassLoader().getResourceAsStream("textures/master.jpg")));
                         Image image = icon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
                         JOptionPane.showMessageDialog(null, "WER HAT MIR MEINE MOD-RECHTE WEGGENOMMEN?!?!", "HALLO?!?!", JOptionPane.ERROR_MESSAGE, new ImageIcon(image));
                 } else {
@@ -87,6 +89,8 @@ public class RevokePermissionGui extends JFrame {
                 System.out.printf("Error Code: %s%n", ex.getSQLState());
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, String.format("Could not revoke the permsission %s from the user %s", comboBox.getSelectedItem(), revokeUsername), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
 
         });

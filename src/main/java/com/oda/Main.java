@@ -23,14 +23,12 @@ public class Main {
     public static String address = "IP";
     public static String url = String.format("jdbc:mysql://%s:%s/%s", address, port, database);
     public static Image imageIcon;
-    public static boolean isAdmin = false;
 
     public static void main(String[] args) {
         try {
             // Register MySQL JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver");
-
-            imageIcon = ImageIO.read(new File("icon.png"));
+            imageIcon = ImageIO.read(Main.class.getClassLoader().getResourceAsStream("textures/icon.png"));
 
             // Connect to the database
             SwingUtilities.invokeLater(() -> {

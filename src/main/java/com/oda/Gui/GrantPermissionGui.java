@@ -64,12 +64,13 @@ public class GrantPermissionGui extends JFrame {
                 Statement statement = connection.createStatement();
                 if (adminCheckBox.isSelected()) {
                     String command = String.format("GRANT ALL PRIVILEGES ON *.* TO '%s'@'%s'", grantUsername, grantAddress);
-                    JOptionPane.showMessageDialog(null, "You are about to grant admin privileges", "Warning", JOptionPane.WARNING_MESSAGE);
-                    if (grantCheckBox.isSelected())
-                        statement.execute(command + "WITH GRANT OPTION;");
-                    else
-                        statement.execute(command + ";");
-                    JOptionPane.showMessageDialog(null, String.format("Granted admin privileges to the user %s", grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
+                    if (JOptionPane.showConfirmDialog(null, "You are about to grant admin privileges", "Warning", JOptionPane.WARNING_MESSAGE) == 0) {
+                        if (grantCheckBox.isSelected())
+                            statement.execute(command + "WITH GRANT OPTION;");
+                        else
+                            statement.execute(command + ";");
+                        JOptionPane.showMessageDialog(null, String.format("Granted admin privileges to the user %s", grantUsername), "Granted permission", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } else {
                     String command = String.format("GRANT %S ON %s.* TO '%s'@'%s';", comboBox.getSelectedItem(), database, grantUsername, grantAddress);
                     if (grantCheckBox.isSelected())
