@@ -1,17 +1,14 @@
-package com.oda;
+package com.odfin;
 
-import com.oda.Gui.ServerSelectorGui;
+import com.odfin.Gui.ServerSelectorGui;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import static com.oda.Gui.LoginGui.username;
 
 public class Main {
     public static Font font = new Font("Arial", Font.PLAIN, 16);

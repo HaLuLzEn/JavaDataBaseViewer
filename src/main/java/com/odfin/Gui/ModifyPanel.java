@@ -1,4 +1,4 @@
-package com.oda.Gui;
+package com.odfin.Gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import static com.oda.Gui.MainGui.values;
-import static com.oda.Main.*;
+import static com.odfin.Gui.MainGui.values;
+import static com.odfin.Main.*;
 
 public class ModifyPanel extends JPanel {
     public ModifyPanel(int id, String table, ArrayList<String> columnArr, JFrame frame, Container cp) {

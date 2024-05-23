@@ -1,6 +1,6 @@
-package com.oda.Gui;
+package com.odfin.Gui;
 
-import com.oda.Main;
+import com.odfin.Main;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static com.oda.Main.*;
+import static com.odfin.Main.*;
 
 public class RevokePermissionGui extends JFrame {
     public RevokePermissionGui(int width, int height, JFrame frame, JList<String> users) {
@@ -25,7 +25,6 @@ public class RevokePermissionGui extends JFrame {
         setVisible(true);
         Container cp = getContentPane();
         cp.setLayout(null);
-
 
         String revoke[] = users.getSelectedValue().split("@");
         String revokeUsername = revoke[0];
@@ -92,9 +91,6 @@ public class RevokePermissionGui extends JFrame {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-
         });
-
-
     }
 }

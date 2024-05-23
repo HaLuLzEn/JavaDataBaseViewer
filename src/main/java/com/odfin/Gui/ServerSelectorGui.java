@@ -1,4 +1,4 @@
-package com.oda.Gui;
+package com.odfin.Gui;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -9,7 +9,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import static com.oda.Main.*;
+import static com.odfin.Main.*;
 
 public class ServerSelectorGui extends JFrame {
     public ServerSelectorGui(int width, int height, boolean switchBack) {

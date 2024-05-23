@@ -1,4 +1,4 @@
-package com.oda.Gui;
+package com.odfin.Gui;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -10,7 +10,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Vector;
 
-import static com.oda.Main.imageIcon;
+import static com.odfin.Main.imageIcon;
 
 public class TableGui extends JFrame {
     JTable table;

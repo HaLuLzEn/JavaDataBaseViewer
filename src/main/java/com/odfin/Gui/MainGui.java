@@ -1,6 +1,6 @@
-package com.oda.Gui;
+package com.odfin.Gui;
 
-import com.oda.Main;
+import com.odfin.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +12,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static com.oda.Gui.LoginGui.username;
-import static com.oda.Main.*;
+import static com.odfin.Gui.LoginGui.username;
+import static com.odfin.Main.*;
 
 public class MainGui extends JFrame {
     public static String columns = "";

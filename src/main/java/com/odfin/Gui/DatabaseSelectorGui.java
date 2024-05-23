@@ -1,4 +1,4 @@
-package com.oda.Gui;
+package com.odfin.Gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Objects;
 
-import static com.oda.Main.*;
+import static com.odfin.Main.*;
 
 public class DatabaseSelectorGui extends JFrame {
     public DatabaseSelectorGui(int width, int height) {

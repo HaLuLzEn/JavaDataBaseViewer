@@ -1,4 +1,4 @@
-package com.oda.Gui;
+package com.odfin.Gui;
 
 import javax.swing.*;
 import java.awt.*;

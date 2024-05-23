@@ -1,11 +1,11 @@
-package com.oda.Gui;
+package com.odfin.Gui;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static com.oda.Main.*;
+import static com.odfin.Main.*;
 
 public class GrantPermissionGui extends JFrame {
     public GrantPermissionGui(int width, int height, JFrame frame, JList<String> users) {

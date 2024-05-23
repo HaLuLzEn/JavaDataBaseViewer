@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: com.oda.Main
+Main-Class: com.odfin.Main
 

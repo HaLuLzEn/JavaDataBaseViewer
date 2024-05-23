@@ -1,4 +1,4 @@
-package com.oda.Gui;
+package com.odfin.Gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import static com.oda.Main.*;
+import static com.odfin.Main.*;
 
 
 public class LoginGui extends JFrame {
